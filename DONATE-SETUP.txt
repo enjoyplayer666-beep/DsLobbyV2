@@ -1,0 +1,169 @@
+=====================================================================
+  Донат-группы DestroyCraft через LuckPerms
+  Команды для КОНСОЛИ сервера (в игре - то же самое, но с "/" в начале).
+  Выполнять по порядку, по одной строке. Строки с # - пояснения, их не вводить.
+=====================================================================
+
+# ---------------------------------------------------------------
+# 0. Если раньше ставил префикс группе default (серые мечи ⚔) - убери его.
+#    Мечи в табе рисует сам плагин (tab.game.default-prefix),
+#    а в чате у обычных игроков будет ⌜Игрок⌟ (chat.format.default-prefix).
+# ---------------------------------------------------------------
+lp group default meta removeprefix 1
+
+# ---------------------------------------------------------------
+# 1. Группы и веса (вес = место в табе, у кого больше - тот выше)
+# ---------------------------------------------------------------
+lp creategroup vip
+lp creategroup luxe
+lp creategroup deluxe
+lp creategroup ultra
+lp creategroup legend
+lp creategroup elitesp
+
+lp group vip setweight 10
+lp group luxe setweight 20
+lp group deluxe setweight 30
+lp group ultra setweight 40
+lp group legend setweight 50
+lp group elitesp setweight 60
+
+lp group elitesp setdisplayname "Elite SP"
+
+# ---------------------------------------------------------------
+# 2. Наследование: каждая привилегия получает всё от предыдущей
+#    ("+ Все возможности предыдущих привилегий" из меню)
+# ---------------------------------------------------------------
+lp group vip parent add default
+lp group luxe parent add vip
+lp group deluxe parent add luxe
+lp group ultra parent add deluxe
+lp group legend parent add ultra
+lp group elitesp parent add legend
+
+# ---------------------------------------------------------------
+# 3. Префиксы (цвета сняты со скринов меню привилегий).
+#    Приоритет = вес, чтобы у Elite SP показывался его префикс, а не унаследованный VIP.
+#    Это префикс в табе, над головой и в чате.
+# ---------------------------------------------------------------
+lp group vip meta setprefix 10 "&f⌜&eVIP&f⌟ "
+lp group luxe meta setprefix 20 "&f⌜&aLuxe&f⌟ "
+lp group deluxe meta setprefix 30 "&f⌜&6Deluxe&f⌟ "
+lp group ultra meta setprefix 40 "&f⌜&#FB42B1Ultra&f⌟ "
+lp group legend meta setprefix 50 "&f⌜&#FB6A4ALegend&f⌟ "
+lp group elitesp meta setprefix 60 "&f⌜&#8D72FBElite&f⌟ &c&lSP&a✔ "
+
+# ---------------------------------------------------------------
+# 4. Права по привилегиям
+#    essentials.* - EssentialsX; litebans.* - если баны через LiteBans.
+#    Строки "ТВОЙ_ПЛАГИН" - подставь права своего плагина (кланы, ранги, /ec, /glow...).
+# ---------------------------------------------------------------
+
+# ---- VIP (65 руб) ----
+lp group vip permission set essentials.hat true
+lp group vip permission set essentials.feed true
+lp group vip permission set essentials.tpahere true
+lp group vip permission set essentials.ptime true
+lp group vip permission set essentials.kit true
+lp group vip permission set essentials.kits.vip true
+lp group vip permission set essentials.joinfullserver true
+# /ec - 2 хранилища:  ТВОЙ_ПЛАГИН (например PlayerVaultsX: playervaults.amount.2)
+# /rank, /c create:   ТВОЙ_ПЛАГИН
+
+# ---- Luxe (125 руб) ----
+lp group luxe permission set essentials.afk true
+lp group luxe permission set essentials.back true
+lp group luxe permission set essentials.back.ondeath true
+lp group luxe permission set essentials.anvil true
+lp group luxe permission set essentials.clearinventory true
+lp group luxe permission set essentials.pweather true
+lp group luxe permission set essentials.kits.luxe true
+
+# ---- Deluxe (240 руб) ----
+lp group deluxe permission set essentials.near true
+lp group deluxe permission set essentials.heal true
+lp group deluxe permission set essentials.invsee true
+lp group deluxe permission set essentials.kick true
+lp group deluxe permission set essentials.kick.exempt true
+lp group deluxe permission set essentials.kits.deluxe true
+lp group deluxe permission set destroylobby.customprefix true
+lp group deluxe permission set litebans.checkmute true
+lp group deluxe permission set litebans.checkban true
+# бустер боевого рейтинга x2: ТВОЙ_ПЛАГИН
+
+# ---- Ultra (399 руб) ----
+lp group ultra permission set destroylobby.prefix.chat true
+lp group ultra permission set destroylobby.prefix.format true
+lp group ultra permission set essentials.kits.ultra true
+lp group ultra permission set litebans.tempmute true
+lp group ultra permission set litebans.unmute true
+# /ec - 3 хранилища, /rank give, бустер кланового рейтинга: ТВОЙ_ПЛАГИН
+
+# ---- Legend (699 руб) ----
+lp group legend permission set essentials.fly true
+lp group legend permission set essentials.vanish true
+lp group legend permission set essentials.beezooka true
+lp group legend permission set essentials.kits.legend true
+lp group legend permission set essentials.msg.color true
+lp group legend permission set destroylobby.chat.colors true
+lp group legend permission set litebans.banlist true
+# /glow (6 цветов): ТВОЙ_ПЛАГИН
+
+# ---- Elite SP (1599 руб) ----
+lp group elitesp permission set essentials.tpo true
+lp group elitesp permission set essentials.tpohere true
+lp group elitesp permission set essentials.msgtoggle true
+lp group elitesp permission set essentials.tptoggle true
+lp group elitesp permission set essentials.socialspy true
+lp group elitesp permission set essentials.kits.elite true
+lp group elitesp permission set destroylobby.chat.color true
+lp group elitesp permission set litebans.tempban true
+lp group elitesp permission set litebans.unban true
+# /ec - 4 хранилища, все цвета /glow: ТВОЙ_ПЛАГИН
+
+# ---------------------------------------------------------------
+# 5. Трек (лестница привилегий) - для повышения одной командой
+# ---------------------------------------------------------------
+lp createtrack donate
+lp track donate append vip
+lp track donate append luxe
+lp track donate append deluxe
+lp track donate append ultra
+lp track donate append legend
+lp track donate append elitesp
+
+=====================================================================
+  Как выдавать
+=====================================================================
+
+# Выдать привилегию (заменяет группы игрока одной - всё нижнее наследуется само):
+lp user Ник parent set ultra
+
+# Игроку из персонала (чтобы не снять его группу персонала) - добавить, а не заменить:
+lp user Ник parent add ultra
+
+# Повысить на ступень (default -> VIP -> Luxe -> ...):
+lp user Ник promote donate
+
+# Временно, например на 30 дней:
+lp user Ник parent addtemp ultra 30d
+
+# Для автовыдачи с сайта (донат-магазин) в поле "команда выдачи" обычно пишут:
+#   lp user {player} parent set ultra
+#   (как называется переменная ника - смотри в настройках своего магазина)
+
+=====================================================================
+  Персонал
+=====================================================================
+# Вес персонала должен быть больше 60, чтобы он стоял в табе выше доната, например:
+#   lp group media setweight 100
+#   lp group moderator setweight 200
+#   lp group curator setweight 300
+#   lp group manager setweight 400
+#   lp group admin setweight 500
+# Приоритет префикса персонала тоже выше 60 (например равен весу).
+# Модерации удобно выдать: destroylobby.chat.spy (видеть локальный чат везде),
+#   destroylobby.seeall и destroylobby.chat.seeall (видеть все миры).
+
+# Наборы /kit vip, /kit luxe ... нужно создать в plugins/Essentials/kits.yml
+# с теми же именами: vip, luxe, deluxe, ultra, legend, elite.

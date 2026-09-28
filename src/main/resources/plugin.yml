@@ -1,0 +1,36 @@
+name: DestroyLobby
+version: '${project.version}'
+main: ru.dscraft.destroylobby.DestroyLobbyPlugin
+api-version: '1.21'
+author: DestroyCraft
+softdepend: [LuckPerms, PlaceholderAPI, Multiverse-Core, AdvancedPortals]
+loadbefore: [DestroyChat]
+
+commands:
+  destroylobby:
+    description: Перезагрузка конфига и точка спавна лобби
+    usage: /destroylobby reload|setspawn
+    permission: destroylobby.admin
+  coins:
+    description: Управление коинами игрока
+    usage: /coins <give|take|set> <ник> <сумма>
+    permission: destroylobby.admin
+  prefix:
+    description: Личный префикс и префикс для чата
+    usage: /prefix set <текст> | /prefix reset | /prefix chat <текст|reset>
+
+permissions:
+  destroylobby.admin:
+    default: op
+  destroylobby.customprefix:
+    default: false
+  destroylobby.lobby.bypass:
+    default: false
+  destroylobby.chat.bypass:
+    default: op
+  destroylobby.seeall:
+    default: false
+  destroylobby.chat.seeall:
+    default: false
+  destroylobby.prefix.format:
+    default: false
