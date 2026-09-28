@@ -43,7 +43,7 @@ public class SpawnListener implements Listener {
         return configManager.lobbyOpsBypass() && player.isOp();
     }
 
-    /** При КАЖДОМ заходе ставим игрока на точку лобби (команду проекта и OP тоже, если не join-bypass) (даже если он вышел в самом лобби), + страховка. */
+    /** При КАЖДОМ заходе ставим игрока на точку лобби (команду проекта тоже, если не join-bypass; OP - нет) (даже если он вышел в самом лобби), + страховка. */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
@@ -53,10 +53,15 @@ public class SpawnListener implements Listener {
             plugin.getLogger().info("[spawn] " + name + ": пропуск, lobby-protection/force-spawn-on-join выключены в конфиге");
             return;
         }
-        // право обхода защиты лобби (у куратора с "*" оно тоже есть) и OP при заходе больше не
-        // оставляют игрока в игровом мире - только если включено lobby-protection.join-bypass
-        if (configManager.joinBypass() && bypasses(player)) {
-            plugin.getLogger().info("[spawn] " + name + ": пропуск, право обхода/OP и join-bypass: true");
+        // операторов не трогаем (ops-bypass: true), как и раньше
+        if (configManager.lobbyOpsBypass() && player.isOp()) {
+            plugin.getLogger().info("[spawn] " + name + ": пропуск, игрок оператор (ops-bypass: true)");
+            return;
+        }
+        // право обхода защиты лобби (у куратора с "*" оно тоже есть) при заходе больше не оставляет
+        // игрока в игровом мире - только если включено lobby-protection.join-bypass
+        if (configManager.joinBypass() && player.hasPermission(LobbyProtectionListener.BYPASS_PERMISSION)) {
+            plugin.getLogger().info("[spawn] " + name + ": пропуск, право обхода и join-bypass: true");
             return;
         }
 
