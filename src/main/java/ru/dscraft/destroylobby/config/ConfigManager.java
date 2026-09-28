@@ -185,7 +185,7 @@ public class ConfigManager {
     }
 
     public int jumpCooldownTicks() {
-        return Math.max(0, cfg.getInt("lobby-jump.cooldown-ticks", 10));
+        return Math.max(0, cfg.getInt("lobby-jump.cooldown-ticks", 20));
     }
 
     public double jumpVerticalMin() {
@@ -233,15 +233,15 @@ public class ConfigManager {
     }
 
     public int jumpBurstCount() {
-        return cfg.getInt("lobby-jump.particles.burst-count", 45);
+        return cfg.getInt("lobby-jump.particles.burst-count", 20);
     }
 
     public int jumpRingPoints() {
-        return cfg.getInt("lobby-jump.particles.ring-points", 24);
+        return cfg.getInt("lobby-jump.particles.ring-points", 12);
     }
 
     public int jumpTrailCount() {
-        return cfg.getInt("lobby-jump.particles.trail-count", 8);
+        return cfg.getInt("lobby-jump.particles.trail-count", 3);
     }
 
     public int jumpTrailMaxTicks() {
@@ -249,7 +249,7 @@ public class ConfigManager {
     }
 
     public int jumpLandingCount() {
-        return cfg.getInt("lobby-jump.particles.landing-count", 25);
+        return cfg.getInt("lobby-jump.particles.landing-count", 10);
     }
 
     // ---- chat ----

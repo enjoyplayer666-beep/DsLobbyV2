@@ -57,6 +57,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         saveDefaultConfig();
         // дописываем в существующий config.yml новые настройки (чат и т.п.), не трогая старые значения
         getConfig().options().copyDefaults(true);
+        migrateJumpSettings();
         saveConfig();
         this.configManager = new ConfigManager(this);
 
@@ -159,6 +160,24 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         }
 
         return false;
+    }
+
+    /**
+     * copyDefaults не меняет уже записанные значения, поэтому новые паузу прыжка (1 секунда)
+     * и меньшее количество синего огня переносим в старый config.yml один раз - по lobby-jump.settings-version.
+     */
+    private void migrateJumpSettings() {
+        FileConfiguration cfg = getConfig();
+        Object current = cfg.get("lobby-jump.settings-version", null); // без значений по умолчанию
+        int latest = cfg.getDefaults() == null ? 1 : cfg.getDefaults().getInt("lobby-jump.settings-version", 1);
+        if (current instanceof Number n && n.intValue() >= latest) return;
+        for (String path : new String[]{"lobby-jump.cooldown-ticks", "lobby-jump.particles.burst-count",
+                "lobby-jump.particles.ring-points", "lobby-jump.particles.trail-count",
+                "lobby-jump.particles.landing-count"}) {
+            cfg.set(path, cfg.getDefaults().get(path));
+        }
+        cfg.set("lobby-jump.settings-version", latest);
+        getLogger().info("Прыжок в лобби: пауза 1 секунда и меньше синего огня.");
     }
 
     /**

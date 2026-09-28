@@ -177,7 +177,7 @@ public class LobbyJumpListener implements Listener {
 
         // 3) немного синих душ для объёма
         if (secondary != null) {
-            world.spawnParticle(secondary, feet, 8, 0.3, 0.1, 0.3, 0.02);
+            world.spawnParticle(secondary, feet, 4, 0.3, 0.1, 0.3, 0.02);
         }
     }
 
@@ -218,7 +218,7 @@ public class LobbyJumpListener implements Listener {
                 world.spawnParticle(main, at.clone().add(0, 0.15, 0), trailCount, 0.18, 0.08, 0.18, 0.01);
                 world.spawnParticle(main, at.clone().add(0, 0.9, 0), Math.max(1, trailCount / 3),
                         0.22, 0.3, 0.22, 0.005);
-                if (secondary != null && ticks % 3 == 0) {
+                if (secondary != null && ticks % 5 == 0) {
                     world.spawnParticle(secondary, at.clone().add(0, 0.2, 0), 1, 0.15, 0.05, 0.15, 0.01);
                 }
             }
