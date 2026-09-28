@@ -380,8 +380,12 @@ public class ConfigManager {
         return cfg.getInt("customprefix.max-length", 24);
     }
 
+    /** Старое значение по умолчанию: оно ниже, чем 1000 у префиксов персонала, и в табе проигрывало им. */
+    public static final int LEGACY_CUSTOM_PREFIX_PRIORITY = 999;
+
     public int customPrefixPriority() {
-        return cfg.getInt("customprefix.priority", 999);
+        int priority = cfg.getInt("customprefix.priority", 100000);
+        return priority == LEGACY_CUSTOM_PREFIX_PRIORITY ? 100000 : priority;
     }
 
     // ---- storage ----

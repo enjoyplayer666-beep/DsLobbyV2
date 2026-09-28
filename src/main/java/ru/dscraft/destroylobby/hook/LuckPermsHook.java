@@ -124,7 +124,8 @@ public class LuckPermsHook {
 
     private boolean removeCustomPrefixNodes(User user, int priority) {
         Set<PrefixNode> toRemove = user.getNodes(NodeType.PREFIX).stream()
-                .filter(n -> n.getPriority() == priority)
+                .filter(n -> n.getPriority() == priority
+                        || n.getPriority() == ConfigManager.LEGACY_CUSTOM_PREFIX_PRIORITY)
                 .collect(Collectors.toSet());
         for (PrefixNode node : toRemove) {
             user.data().remove(node);

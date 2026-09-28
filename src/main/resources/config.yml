@@ -251,7 +251,8 @@ customprefix:
   # /prefix set (Deluxe+)
   permission: "destroylobby.customprefix"
   max-length: 24
-  priority: 999
+  # выше, чем у любой группы (у персонала 1000), иначе личный префикс не виден в табе
+  priority: 100000
 
 storage:
   file: "playerdata.yml"
