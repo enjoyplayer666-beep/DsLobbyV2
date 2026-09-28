@@ -102,6 +102,28 @@ scoreboard:
       - "  <gradient:#6D84FC:#FFFFFF>ds-craft.ru</gradient>"
 
 # ---------------------------------------------------------------------
+#  Приветствие при входе через портал из лобби в игровой мир (SkyPvP).
+#  Чат сначала очищается (clear-lines пустых строк), потом выводятся lines.
+#  Строки - MiniMessage, <center> в начале - по центру чата. Цвета сняты со скрина.
+# ---------------------------------------------------------------------
+game-welcome:
+  enabled: true
+  clear-chat: true
+  clear-lines: 100
+  lines:
+    - ""
+    - "<center><#7B8FFB>SkyPvP"
+    - "<center><gray>Добро пожаловать на сервер!"
+    - "<center><gray>Группа Вконтакте: <click:open_url:https://vk.com/game_ds><#7B8FFB>vk.com/game_ds</click>"
+    - "<center><gray>Онлайн магазин: <click:open_url:https://ds-craft.ru><#7B8FFB>ds-craft.ru</click>"
+    - "<center><gray>Меню сервера: <click:run_command:/menu><#7B8FFB>/menu</click>"
+    - "<center><gray>Правила: <click:run_command:/rules><#7B8FFB>/rules</click>"
+    - ""
+    - ""
+    - "<#E0E4FF>→</#E0E4FF> <#4682E4>Меню скайпвп</#4682E4>"
+    - "<#4682E4>→</#4682E4> <#E0E4FF>Пропишите - <click:run_command:/menu><#4682E4>/menu</#4682E4></click></#E0E4FF>"
+
+# ---------------------------------------------------------------------
 #  Прыжок в лобби (одиночный, сила зависит от взгляда)
 # ---------------------------------------------------------------------
 lobby-jump:

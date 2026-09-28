@@ -15,6 +15,7 @@ import ru.dscraft.destroylobby.hook.PlaceholderHook;
 import ru.dscraft.destroylobby.listener.ChatListener;
 import ru.dscraft.destroylobby.listener.LobbyJumpListener;
 import ru.dscraft.destroylobby.listener.LobbyProtectionListener;
+import ru.dscraft.destroylobby.listener.GameWelcomeListener;
 import ru.dscraft.destroylobby.listener.PlayerConnectionListener;
 import ru.dscraft.destroylobby.listener.SpawnListener;
 import ru.dscraft.destroylobby.scoreboard.ScoreboardManager;
@@ -89,6 +90,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(
                 new PlayerConnectionListener(this, tabManager, scoreboardManager, statsManager, visibilityManager), this);
+        getServer().getPluginManager().registerEvents(new GameWelcomeListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(
                 new LobbyJumpListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(
