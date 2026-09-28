@@ -17,6 +17,8 @@ import ru.dscraft.destroylobby.listener.LobbyJumpListener;
 import ru.dscraft.destroylobby.listener.LobbyProtectionListener;
 import ru.dscraft.destroylobby.listener.GameWelcomeListener;
 import ru.dscraft.destroylobby.listener.TeleportCommandListener;
+import ru.dscraft.destroylobby.listener.UnknownCommandListener;
+import ru.dscraft.destroylobby.listener.PlayerTimeMenuListener;
 import ru.dscraft.destroylobby.listener.PlayerConnectionListener;
 import ru.dscraft.destroylobby.listener.SpawnListener;
 import ru.dscraft.destroylobby.scoreboard.ScoreboardManager;
@@ -92,6 +94,8 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new PlayerConnectionListener(this, tabManager, scoreboardManager, statsManager, visibilityManager), this);
         getServer().getPluginManager().registerEvents(new GameWelcomeListener(this, configManager), this);
+        getServer().getPluginManager().registerEvents(new UnknownCommandListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerTimeMenuListener(this), this);
         TeleportCommandListener teleports = new TeleportCommandListener(this, configManager);
         getServer().getPluginManager().registerEvents(teleports, this);
         if (getCommand("hub") != null) getCommand("hub").setExecutor(teleports);

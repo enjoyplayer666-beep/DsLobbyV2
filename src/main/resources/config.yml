@@ -170,6 +170,26 @@ chat:
   block-in-lobby: true
   lobby-blocked-message: "<yellow>❗</yellow> <gray>Вы находитесь в <gold>лобби</gold>, здесь чат недоступен</gray>"
 
+# Неизвестная команда или команда без права - одно сообщение вместо стандартных.
+unknown-command:
+  enabled: true
+  message: "<#CCCCFF>Нет такой команды :/"
+  # не подсказывать по Tab команды, на которые нет права
+  hide-in-tab: true
+
+# /ptime без аргументов - меню выбора времени (пункты кликабельные)
+ptime-menu:
+  enabled: true
+  lines:
+    - ""
+    - "<#4682E4>Выбери время:"
+    - ""
+    - "<#8A8A8A>1. Рассвет <#C8C5B8>[<click:run_command:/ptime sunrise><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
+    - "<#8A8A8A>2. Полдень <#C8C5B8>[<click:run_command:/ptime noon><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
+    - "<#8A8A8A>3. Закат <#C8C5B8>[<click:run_command:/ptime sunset><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
+    - "<#8A8A8A>4. Полночь <#C8C5B8>[<click:run_command:/ptime midnight><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
+    - "<#8A8A8A>5. Сбросить <#C8C5B8>[<click:run_command:/ptime reset><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
+
 # /hub, /lobby - в лобби; /spawn - на спавн мира, где игрок сейчас
 teleport:
   # перехватывать /spawn у Essentials (у него своя точка спавна)
