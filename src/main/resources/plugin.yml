@@ -15,6 +15,10 @@ commands:
     description: Управление коинами игрока
     usage: /coins <give|take|set> <ник> <сумма>
     permission: destroylobby.admin
+  hub:
+    description: Телепорт в лобби
+    usage: /hub
+    aliases: [lobby]
   prefix:
     description: Личный префикс и префикс для чата
     usage: /prefix set <текст> | /prefix reset | /prefix chat <текст|reset>

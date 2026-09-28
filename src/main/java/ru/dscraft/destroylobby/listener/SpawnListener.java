@@ -2,6 +2,7 @@ package ru.dscraft.destroylobby.listener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -88,16 +89,29 @@ public class SpawnListener implements Listener {
         }, 3L);
     }
 
-    /** Смерть в игровом мире -> возвращаемся в лобби (перекрывает кровать и respawn-настройки Multiverse). */
+    /**
+     * Возрождение: respawn-mode: world - в том же мире, где игрок умер (кровать/якорь в этом мире
+     * сохраняются, иначе - спавн мира), respawn-mode: lobby - в лобби. Смерть в лобби - точка лобби.
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onRespawn(PlayerRespawnEvent event) {
-        if (!configManager.lobbyProtectionEnabled() || !configManager.respawnInLobby()) return;
+        if (!configManager.lobbyProtectionEnabled()) return;
         Player player = event.getPlayer();
-        if (bypasses(player)) return;
+        World deathWorld = player.getWorld();
+        Location lobby = configManager.getLobbySpawnLocation();
 
-        Location spawn = configManager.getLobbySpawnLocation();
-        if (spawn != null) {
-            event.setRespawnLocation(spawn);
+        if (configManager.isLobbyWorld(deathWorld.getName())) {
+            if (lobby != null) event.setRespawnLocation(lobby);
+            return;
+        }
+        if (configManager.respawnInLobby()) {
+            if (bypasses(player)) return;
+            if (lobby != null) event.setRespawnLocation(lobby);
+            return;
+        }
+        Location respawn = event.getRespawnLocation();
+        if (respawn == null || respawn.getWorld() == null || !respawn.getWorld().equals(deathWorld)) {
+            event.setRespawnLocation(deathWorld.getSpawnLocation().add(0.5, 0, 0.5));
         }
     }
 }

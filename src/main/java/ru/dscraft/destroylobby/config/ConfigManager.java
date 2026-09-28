@@ -289,8 +289,9 @@ public class ConfigManager {
         return cfg.getBoolean("lobby-protection.force-spawn-on-join", true);
     }
 
+    /** Куда возрождать после смерти: "world" - в мире смерти, "lobby" - в лобби. */
     public boolean respawnInLobby() {
-        return cfg.getBoolean("lobby-protection.respawn-in-lobby", true);
+        return "lobby".equalsIgnoreCase(cfg.getString("lobby-protection.respawn-mode", "world"));
     }
 
     public Location getLobbySpawnLocation() {

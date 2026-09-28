@@ -170,13 +170,22 @@ chat:
   block-in-lobby: true
   lobby-blocked-message: "<yellow>❗</yellow> <gray>Вы находитесь в <gold>лобби</gold>, здесь чат недоступен</gray>"
 
+# /hub, /lobby - в лобби; /spawn - на спавн мира, где игрок сейчас
+teleport:
+  # перехватывать /spawn у Essentials (у него своя точка спавна)
+  override-spawn: true
+  hub-message: "<gray>Вы телепортированы в <#7B8FFB>лобби</#7B8FFB>.</gray>"
+  spawn-message: "<gray>Вы телепортированы на <#7B8FFB>спавн</#7B8FFB>.</gray>"
+
 lobby-protection:
   enabled: true
   force-spawn-on-join: true
   # false - при заходе в лобби переносит и тех, у кого право обхода защиты лобби (команда проекта);
   # true - они остаются там, где вышли. Операторов не трогает ops-bypass (ниже).
   join-bypass: false
-  respawn-in-lobby: true
+  # куда возрождать после смерти: world - в том же мире, где умер (спавн мира или кровать в нём),
+  # lobby - в лобби. В лобби - командой /hub (/lobby), на спавн своего мира - /spawn
+  respawn-mode: world
   ops-bypass: true
   spawn:
     world: ""

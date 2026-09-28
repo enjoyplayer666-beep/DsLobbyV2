@@ -144,6 +144,8 @@ public class LobbyProtectionListener implements Listener {
         String message = event.getMessage().substring(1); // убираем "/"
         if (message.isEmpty()) return;
         String label = message.split(" ")[0].toLowerCase(Locale.ROOT);
+        // телепорты DestroyLobby работают и в лобби
+        if (label.equals("hub") || label.equals("lobby") || label.equals("spawn")) return;
 
         List<String> allowed = configManager.lobbyAllowedCommands();
         for (String allowedCommand : allowed) {

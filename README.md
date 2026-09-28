@@ -96,3 +96,10 @@ mvn clean package
 
 `%destroy_coins%`, `%destroy_kills%`, `%destroy_deaths%`, `%destroy_group%`,
 `%destroy_namecolor%`, `%destroy_nick%`. Префикс/суффикс — `%luckperms_prefix%` / `%luckperms_suffix%`.
+
+## Телепорты и возрождение
+
+- `/hub` (`/lobby`) - в лобби, `/spawn` - на спавн мира, где игрок сейчас (перехватывает `/spawn` Essentials,
+  выключается `teleport.override-spawn: false`).
+- После смерти игрок возрождается в том же мире (кровать в этом мире или спавн мира) -
+  `lobby-protection.respawn-mode: world`; `lobby` - возрождение в лобби, как раньше.
