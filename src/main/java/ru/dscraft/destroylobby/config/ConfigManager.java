@@ -66,6 +66,11 @@ public class ConfigManager {
         return getGameWorlds().getOrDefault(worldName, worldName);
     }
 
+    /** true - игроки с правом обхода защиты лобби и OP при заходе остаются там, где вышли. */
+    public boolean joinBypass() {
+        return cfg.getBoolean("lobby-protection.join-bypass", false);
+    }
+
     public boolean isGameWorld(String worldName) {
         return getGameWorlds().containsKey(worldName);
     }

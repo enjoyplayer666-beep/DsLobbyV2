@@ -173,6 +173,9 @@ chat:
 lobby-protection:
   enabled: true
   force-spawn-on-join: true
+  # false - при заходе в лобби переносит всех, включая команду проекта и OP;
+  # true - те, у кого право обхода защиты лобби / OP, остаются там, где вышли
+  join-bypass: false
   respawn-in-lobby: true
   ops-bypass: true
   spawn:
