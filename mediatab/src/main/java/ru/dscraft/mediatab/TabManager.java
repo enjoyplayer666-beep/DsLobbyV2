@@ -118,6 +118,11 @@ final class TabManager {
 
             prefix = ColorUtil.rich(rawPrefix);
             suffix = ColorUtil.rich(rawSuffix);
+            // титул из MediaItems - между ником и суффиксом: "Ник титул ✔"
+            Component title = Hooks.title(player);
+            if (!Component.empty().equals(title)) {
+                suffix = Component.text(" ").append(title).append(suffix);
+            }
             nameColor = ColorUtil.parseColor(nickStyle, NamedTextColor.GRAY);
             name = Component.empty().append(ColorUtil.rich(nickStyle + player.getName()));
         }

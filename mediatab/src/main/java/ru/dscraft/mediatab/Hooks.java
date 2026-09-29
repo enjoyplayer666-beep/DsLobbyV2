@@ -66,6 +66,27 @@ final class Hooks {
         }
     }
 
+    private static Method titleMethod;
+    private static ClassLoader itemsLoader;
+
+    /** Выбранный титул игрока из MediaItems (ru.dscraft.mediaitems.TitlesApi) или пусто. */
+    static synchronized net.kyori.adventure.text.Component title(Player p) {
+        Plugin items = Bukkit.getPluginManager().getPlugin("MediaItems");
+        if (items == null || !items.isEnabled()) return net.kyori.adventure.text.Component.empty();
+        ClassLoader cl = items.getClass().getClassLoader();
+        try {
+            if (cl != itemsLoader || titleMethod == null) {
+                titleMethod = Class.forName("ru.dscraft.mediaitems.TitlesApi", true, cl).getMethod("title", Player.class);
+                itemsLoader = cl;
+            }
+            Object r = titleMethod.invoke(null, p);
+            return r instanceof net.kyori.adventure.text.Component c ? c : net.kyori.adventure.text.Component.empty();
+        } catch (Exception e) {
+            titleMethod = null;
+            return net.kyori.adventure.text.Component.empty();
+        }
+    }
+
     /** %плейсхолдеры% PlaceholderAPI, если он установлен. */
     static synchronized String papi(Player p, String text) {
         if (text == null || text.indexOf('%') < 0) return text;

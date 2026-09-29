@@ -4,7 +4,7 @@ main: ru.dscraft.mediatab.MediaTabPlugin
 api-version: '1.21'
 author: DestroyCraft
 description: Таб (шапка, низ, строки игроков, ники над головой) и скорборд справа
-softdepend: [LuckPerms, PlaceholderAPI, DestroyLobby, DestroyChat]
+softdepend: [LuckPerms, PlaceholderAPI, DestroyLobby, DestroyChat, MediaItems]
 commands:
   mediatab:
     description: Перезагрузка конфига MediaTab
