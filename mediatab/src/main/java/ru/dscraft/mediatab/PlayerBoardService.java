@@ -1,4 +1,4 @@
-package ru.dscraft.destroylobby.tab;
+package ru.dscraft.mediatab;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

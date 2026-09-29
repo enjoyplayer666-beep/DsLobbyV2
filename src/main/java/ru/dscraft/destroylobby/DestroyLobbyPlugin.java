@@ -21,10 +21,8 @@ import ru.dscraft.destroylobby.listener.UnknownCommandListener;
 import ru.dscraft.destroylobby.listener.PlayerTimeMenuListener;
 import ru.dscraft.destroylobby.listener.PlayerConnectionListener;
 import ru.dscraft.destroylobby.listener.SpawnListener;
-import ru.dscraft.destroylobby.scoreboard.ScoreboardManager;
 import ru.dscraft.destroylobby.stats.StatsManager;
-import ru.dscraft.destroylobby.tab.PlayerBoardService;
-import ru.dscraft.destroylobby.tab.TabManager;
+import ru.dscraft.destroylobby.api.LobbyApi;
 import ru.dscraft.destroylobby.visibility.VisibilityManager;
 
 import java.io.File;
@@ -48,9 +46,6 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
     private ConfigManager configManager;
     private LuckPermsHook luckPermsHook;
     private StatsManager statsManager;
-    private PlayerBoardService boardService;
-    private TabManager tabManager;
-    private ScoreboardManager scoreboardManager;
     private VisibilityManager visibilityManager;
 
     @Override
@@ -80,9 +75,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         logIntegration("DestroyChat");
 
         this.statsManager = new StatsManager(this);
-        this.boardService = new PlayerBoardService();
-        this.tabManager = new TabManager(this, configManager, luckPermsHook, boardService);
-        this.scoreboardManager = new ScoreboardManager(this, configManager, statsManager, boardService);
+        LobbyApi.init(statsManager); // таб и скорборд - в плагине MediaTab, он берёт отсюда коины/убийства/смерти
         this.visibilityManager = new VisibilityManager(this, configManager);
 
         // PlaceholderAPI - регистрируем экспаншен, если плагин установлен
@@ -92,7 +85,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         }
 
         getServer().getPluginManager().registerEvents(
-                new PlayerConnectionListener(this, tabManager, scoreboardManager, statsManager, visibilityManager), this);
+                new PlayerConnectionListener(this, statsManager, visibilityManager), this);
         getServer().getPluginManager().registerEvents(new GameWelcomeListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(new UnknownCommandListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerTimeMenuListener(this), this);
@@ -111,19 +104,12 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                 statsManager, this);
 
         if (getCommand("prefix") != null) {
-            PrefixCommand prefixCommand = new PrefixCommand(configManager, luckPermsHook, tabManager);
+            PrefixCommand prefixCommand = new PrefixCommand(configManager, luckPermsHook);
             getCommand("prefix").setExecutor(prefixCommand);
             getCommand("prefix").setTabCompleter(prefixCommand);
         }
 
-        tabManager.startUpdateTask();
-        scoreboardManager.startUpdateTask();
-
         // подхватываем игроков, которые уже онлайн (например после /reload плагинов)
-        for (Player online : getServer().getOnlinePlayers()) {
-            tabManager.handleJoin(online);
-            scoreboardManager.handleJoin(online);
-        }
         visibilityManager.updateAll();
 
         getLogger().info("DestroyLobby включен.");
@@ -132,11 +118,10 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         if (visibilityManager != null) visibilityManager.showEveryone();
-        if (tabManager != null) tabManager.stop();
-        if (scoreboardManager != null) scoreboardManager.stop();
         if (statsManager != null) {
             statsManager.saveAll();
         }
+        LobbyApi.init(null);
         getLogger().info("DestroyLobby выключен.");
     }
 
@@ -145,8 +130,6 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         if (command.getName().equalsIgnoreCase("destroylobby")) {
             if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
                 configManager.reload();
-                tabManager.refreshAll();
-                scoreboardManager.refreshAll();
                 visibilityManager.updateAll();
                 sender.sendMessage("§a[DestroyLobby] Конфиг перезагружен.");
                 return true;

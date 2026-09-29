@@ -7,7 +7,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.dscraft.destroylobby.DestroyLobbyPlugin;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +30,6 @@ public class ConfigManager {
         this.cfg = plugin.getConfig();
     }
 
-    /** Строка ИЛИ список строк из конфига -> список строк (для многострочных хедеров/футеров). */
-    private List<String> lines(String path) {
-        if (cfg.isList(path)) return cfg.getStringList(path);
-        String single = cfg.getString(path, "");
-        List<String> out = new ArrayList<>();
-        if (single != null && !single.isEmpty()) out.add(single);
-        return out;
-    }
 
     // ---- миры ----
 
@@ -98,82 +89,7 @@ public class ConfigManager {
         return cfg.getString("isolation.chat-see-all-permission", "destroylobby.chat.seeall");
     }
 
-    // ---- tab ----
-
-    public int getTabUpdateInterval() {
-        return cfg.getInt("tab.update-interval-ticks", 20);
-    }
-
-    public List<String> getTabHeaderLobby() {
-        return lines("tab.lobby.header");
-    }
-
-    public List<String> getTabFooterLobby() {
-        return lines("tab.lobby.footer");
-    }
-
-    public List<String> getTabHeaderGame() {
-        return lines("tab.game.header");
-    }
-
-    public List<String> getTabFooterGame() {
-        return lines("tab.game.footer");
-    }
-
-    /** Единый префикс для ВСЕХ игроков, пока они в лобби (MiniMessage). */
-    public String getLobbySharedPrefix() {
-        return cfg.getString("tab.lobby.shared-prefix", "");
-    }
-
-    /** Цвет ника в лобби (единый для всех): "&7", "&#A8A8A8", "<gray>". */
-    public String getLobbySharedNameColor() {
-        return cfg.getString("tab.lobby.shared-name-color", "&7");
-    }
-
-    public boolean tabShowPrefixesGame() {
-        return cfg.getBoolean("tab.game.show-prefixes", true);
-    }
-
-    /** Префикс, если у игрока в LuckPerms префикса нет вообще (обычный игрок без доната). */
-    public String getGameDefaultPrefix() {
-        return cfg.getString("tab.game.default-prefix", "");
-    }
-
-    /** Автоматически ставить пробел между ником и суффиксом из LuckPerms. */
-    public boolean tabSuffixAutoSpace() {
-        return cfg.getBoolean("tab.game.suffix-auto-space", true);
-    }
-
-    // ---- scoreboard ----
-
-    public boolean scoreboardShowInLobby() {
-        return cfg.getBoolean("scoreboard.show-in-lobby", false);
-    }
-
-    public int getScoreboardUpdateInterval() {
-        return cfg.getInt("scoreboard.update-interval-ticks", 20);
-    }
-
-    public boolean scoreboardHideNumbers() {
-        return cfg.getBoolean("scoreboard.hide-numbers", true);
-    }
-
-    /** "hearts" - ХП в сердечках (10 при полном здоровье, как на скрине), "points" - в единицах (20). */
-    public String scoreboardHealthMode() {
-        return cfg.getString("scoreboard.health-mode", "hearts");
-    }
-
-    public String getScoreboardDateFormat() {
-        return cfg.getString("scoreboard.date-format", "dd.MM.yyyy");
-    }
-
-    public String getScoreboardTitle() {
-        return cfg.getString("scoreboard.game.title", "<white>{world}</white>");
-    }
-
-    public List<String> getScoreboardLines() {
-        return cfg.getStringList("scoreboard.game.lines");
-    }
+    // таб и скорборд - в плагине MediaTab
 
     // ---- прыжок в лобби ----
 

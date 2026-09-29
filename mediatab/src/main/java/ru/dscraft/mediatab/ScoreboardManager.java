@@ -1,20 +1,13 @@
-package ru.dscraft.destroylobby.scoreboard;
+package ru.dscraft.mediatab;
 
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
-import ru.dscraft.destroylobby.DestroyLobbyPlugin;
-import ru.dscraft.destroylobby.config.ConfigManager;
-import ru.dscraft.destroylobby.stats.PlayerStats;
-import ru.dscraft.destroylobby.stats.StatsManager;
-import ru.dscraft.destroylobby.tab.PlayerBoardService;
-import ru.dscraft.destroylobby.util.ColorUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,69 +19,48 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Персональная боковая панель каждому игроку, показывается только вне лобби -
- * как на скрине "SkyPvP". Цифры справа скрыты (scoreboard.hide-numbers).
- * <p>
- * ВАЖНО: раньше этот класс подменял игроку scoreboard целиком новым объектом,
- * что стирало все Team-команды таба (см. javadoc {@link PlayerBoardService}).
- * Теперь сайдбар живёт на том же персональном board'е, что и команды таба -
- * здесь только objective/scores/строчные "dlsb_" команды, сортировку и
- * префиксы игроков это больше не трогает.
+ * Персональная боковая панель каждому игроку, по умолчанию только вне лобби.
+ * Цифры справа скрыты (scoreboard.hide-numbers). Сайдбар живёт на том же персональном board'е,
+ * что и команды таба (см. {@link PlayerBoardService}), поэтому сортировку и ники над головой не трогает.
  */
-public class ScoreboardManager {
+final class ScoreboardManager {
 
     private static final String OBJECTIVE_ID = "destroy_sb";
     private static final String LINE_TEAM_PREFIX = "dlsb_";
 
-    private final DestroyLobbyPlugin plugin;
-    private final ConfigManager configManager;
-    private final StatsManager statsManager;
+    private final Settings settings;
     private final PlayerBoardService boardService;
 
     /** Какие entry-строки сейчас используются под сайдбар каждого игрока - чтобы корректно чистить старые строки. */
     private final Map<UUID, List<String>> activeEntries = new ConcurrentHashMap<>();
 
-    private BukkitTask task;
-
-    public ScoreboardManager(DestroyLobbyPlugin plugin, ConfigManager configManager,
-                              StatsManager statsManager, PlayerBoardService boardService) {
-        this.plugin = plugin;
-        this.configManager = configManager;
-        this.statsManager = statsManager;
+    ScoreboardManager(Settings settings, PlayerBoardService boardService) {
+        this.settings = settings;
         this.boardService = boardService;
     }
 
-    public void startUpdateTask() {
-        long interval = configManager.getScoreboardUpdateInterval();
-        task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                update(player);
-            }
-        }, 20L, interval);
-    }
-
-    public void refreshAll() {
+    void refreshAll() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             update(player);
         }
     }
 
-    public void handleJoin(Player player) {
+    void handleJoin(Player player) {
         update(player);
     }
 
-    public void handleQuit(Player player) {
+    void handleQuit(Player player) {
         activeEntries.remove(player.getUniqueId());
         // сам персональный board игрока целиком уничтожается вместе с ним в PlayerBoardService,
         // доп. действий тут не нужно.
     }
 
-    public void update(Player player) {
+    void update(Player player) {
         Scoreboard board = boardService.getOrCreateBoard(player);
 
         String worldName = player.getWorld().getName();
-        boolean isLobby = configManager.isLobbyWorld(worldName);
-        boolean shouldShow = !isLobby || configManager.scoreboardShowInLobby();
+        boolean isLobby = settings.isLobbyWorld(worldName);
+        boolean shouldShow = !isLobby || settings.scoreboardInLobby();
 
         if (!shouldShow) {
             clearSidebar(player, board);
@@ -99,7 +71,7 @@ public class ScoreboardManager {
         if (objective == null) {
             objective = board.registerNewObjective(OBJECTIVE_ID, "dummy", ColorUtil.parse(buildTitle(player)));
             objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-            if (configManager.scoreboardHideNumbers()) {
+            if (settings.hideNumbers()) {
                 // убирает красные цифры справа (как на сервере-образце), Paper 1.20.4+
                 objective.numberFormat(NumberFormat.blank());
             }
@@ -115,16 +87,15 @@ public class ScoreboardManager {
             }
         }
 
-        PlayerStats stats = statsManager.get(player);
-        Map<String, String> placeholders = buildPlaceholders(player, stats);
+        Map<String, String> placeholders = buildPlaceholders(player);
 
-        List<String> lines = configManager.getScoreboardLines();
+        List<String> lines = settings.scoreboardLines();
         int size = lines.size();
         List<String> usedEntries = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             String rawLine = lines.get(i);
-            Component lineComponent = ColorUtil.parse(rawLine, placeholders);
+            Component lineComponent = ColorUtil.parse(Hooks.papi(player, rawLine), placeholders);
             int score = size - i;
 
             String teamName = LINE_TEAM_PREFIX + i;
@@ -167,22 +138,23 @@ public class ScoreboardManager {
 
     private String buildTitle(Player player) {
         String worldName = player.getWorld().getName();
-        String display = configManager.getDisplayNameForWorld(worldName);
-        return configManager.getScoreboardTitle().replace("{world}", display);
+        String display = settings.worldDisplayName(worldName);
+        return Hooks.papi(player, settings.scoreboardTitle()).replace("{world}", display);
     }
 
-    private Map<String, String> buildPlaceholders(Player player, PlayerStats stats) {
+    private Map<String, String> buildPlaceholders(Player player) {
         Map<String, String> map = new HashMap<>();
         map.put("player", player.getName());
         double hp = player.getHealth();
-        if ("hearts".equalsIgnoreCase(configManager.scoreboardHealthMode())) {
+        if (settings.healthInHearts()) {
             hp = hp / 2.0; // 20 единиц = 10 сердечек, как "ХП: 10" на скрине
         }
         map.put("health", String.valueOf((int) Math.ceil(hp)));
-        map.put("coins", String.valueOf(stats.getCoins()));
-        map.put("kills", String.valueOf(stats.getKills()));
-        map.put("deaths", String.valueOf(stats.getDeaths()));
-        map.put("date", new SimpleDateFormat(configManager.getScoreboardDateFormat()).format(new Date()));
+        map.put("coins", Hooks.coins(player));
+        map.put("kills", Hooks.kills(player));
+        map.put("deaths", Hooks.deaths(player));
+        map.put("world", settings.worldDisplayName(player.getWorld().getName()));
+        map.put("date", new SimpleDateFormat(settings.dateFormat()).format(new Date()));
         return map;
     }
 
@@ -203,9 +175,5 @@ public class ScoreboardManager {
             candidate = candidate + "§r";
         }
         return candidate;
-    }
-
-    public void stop() {
-        if (task != null) task.cancel();
     }
 }

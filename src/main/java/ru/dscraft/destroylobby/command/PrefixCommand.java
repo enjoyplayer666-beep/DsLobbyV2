@@ -10,7 +10,6 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import ru.dscraft.destroylobby.config.ConfigManager;
 import ru.dscraft.destroylobby.hook.LuckPermsHook;
-import ru.dscraft.destroylobby.tab.TabManager;
 import ru.dscraft.destroylobby.util.ColorUtil;
 import ru.dscraft.destroylobby.util.Perms;
 
@@ -35,12 +34,10 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
 
     private final ConfigManager configManager;
     private final LuckPermsHook luckPermsHook;
-    private final TabManager tabManager;
 
-    public PrefixCommand(ConfigManager configManager, LuckPermsHook luckPermsHook, TabManager tabManager) {
+    public PrefixCommand(ConfigManager configManager, LuckPermsHook luckPermsHook) {
         this.configManager = configManager;
         this.luckPermsHook = luckPermsHook;
-        this.tabManager = tabManager;
     }
 
     @Override
@@ -91,7 +88,6 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
             deny(player, "Не удалось применить префикс, попробуй ещё раз.");
             return;
         }
-        tabManager.updatePlayerTeam(player);
         player.sendMessage(Component.text("Готово, теперь ты выглядишь так: ", NamedTextColor.GRAY)
                 .append(ColorUtil.rich(raw))
                 .append(Component.text(player.getName(), NamedTextColor.GRAY)));
@@ -99,7 +95,6 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
 
     private void handleReset(Player player) {
         boolean removed = luckPermsHook.clearCustomPrefix(player);
-        tabManager.updatePlayerTeam(player);
         if (removed) {
             player.sendMessage(ColorUtil.parse("<green>Личный префикс сброшен, вернулся префикс привилегии.</green>"));
         } else {

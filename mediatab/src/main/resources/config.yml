@@ -1,0 +1,91 @@
+# =====================================================================
+#  MediaTab - таб и скорборд DestroyCraft
+#  Тексты - MiniMessage: <gradient:#A:#B>..</gradient>, <#RRGGBB>, <bold>, <white> ...
+#  Префиксы из LuckPerms - &-коды и &#RRGGBB.
+#  Работают плейсхолдеры PlaceholderAPI (%...%), если он установлен.
+#  При первом запуске настройки таба и скорборда переносятся сами из DestroyLobby и DestroyChat.
+# =====================================================================
+
+worlds:
+  # имя мира лобби на сервере (как в /mv list)
+  lobby: "world"
+  # что писать вместо имени мира лобби в табе
+  lobby-display-name: "lobby"
+  # игровые миры: имя_мира_на_сервере: "Отображаемое имя"
+  game-worlds:
+    SkyPvP: "SkyPvP"
+
+# ---------------------------------------------------------------------
+#  TAB. В шапке и низе: {world} {player} {online} {max}
+# ---------------------------------------------------------------------
+tab:
+  update-interval-ticks: 20
+
+  lobby:
+    # каждая строка списка = строка в табе, "" = пустая строка
+    header:
+      - "<gradient:#FB786F:#FDCB6B>DestroyCraft</gradient>"
+      - "<#FDBD6C>{world}</#FDBD6C>"
+      - ""
+    footer:
+      - ""
+      - "<gradient:#FB786F:#FDCB6B>Группа ВК</gradient> <white>•</white> <white>vk.com/game_ds</white>"
+      - "<gradient:#FB786F:#FDCB6B>Дискорд</gradient> <white>•</white> <white>discord.gg/H6aHmpt</white>"
+      - "<gradient:#FB786F:#FDCB6B>ТГ канал</gradient> <white>•</white> <white>t.me/dscraft</white>"
+      - ""
+      - "<#FDBD6C>ds-craft.ru</#FDBD6C>"
+    # один и тот же префикс у ВСЕХ в лобби.  - оранжевый смайлик из ресурс-пака.
+    shared-prefix: "<#FC8F6E></#FC8F6E> "
+    shared-name-color: "&7"
+
+  game:
+    header:
+      - "<bold><gradient:#6D84FC:#FFFFFF>DestroyCraft</gradient></bold>"
+      - "<white>{world}</white>"
+      - ""
+    footer:
+      - ""
+      - "<gradient:#6D84FC:#FFFFFF>Наши соц.сети:</gradient>"
+      - "<gradient:#6D84FC:#FFFFFF>Используйте</gradient> <white>• /links</white>"
+      - ""
+      - "<#6D84FC>ds-craft.ru</#6D84FC>"
+    # показывать префиксы/суффиксы из LuckPerms
+    show-prefixes: true
+    # префикс, если у игрока в LuckPerms префикса нет (обычный игрок)
+    default-prefix: "&7⚔ "
+    # сам ставит пробел между ником и суффиксом ("Akemitori ✔")
+    suffix-auto-space: true
+    # Цвет ника: хвост префикса (/prefix set &6ТЕКСТ &2&l - ник &2&l),
+    # иначе staff-name-color у команды проекта и name-color у остальных
+    name-color: "&7"
+    staff-name-color: "&f"
+    # группы команды проекта (белый ник)
+    staff-groups: [curator, admin, manager, moderator, media, mediajr]
+
+# ---------------------------------------------------------------------
+#  Скорборд справа
+#  {player} {health} {coins} {kills} {deaths} {date} {world} + %плейсхолдеры%
+#  коины, убийства и смерти - из DestroyLobby
+# ---------------------------------------------------------------------
+scoreboard:
+  show-in-lobby: false
+  update-interval-ticks: 20
+  # убрать красные цифры справа
+  hide-numbers: true
+  # hearts - ХП в сердечках (10 при полном здоровье), points - в единицах (20)
+  health-mode: "hearts"
+  date-format: "dd.MM.yyyy"
+  game:
+    title: "<gradient:#6D84FC:#FFFFFF>{world}</gradient>"
+    # пробелы в начале строки - чтобы дата и сайт стояли по центру
+    lines:
+      - "    <#A1B0C7>{date}</#A1B0C7>"
+      - ""
+      - "<yellow>⚡</yellow> <#A7B4FC>Ник:</#A7B4FC> <white>{player}</white>"
+      - "<dark_red>❤</dark_red> <#A7B4FC>ХП:</#A7B4FC> <white>{health}</white>"
+      - "<white>⛃</white>  <#A7B4FC>Коины:</#A7B4FC> <white>{coins}</white>"
+      - ""
+      - "<red>⚔</red> <#A7B4FC>Убийства:</#A7B4FC> <white>{kills}</white>"
+      - "<white>☠</white> <#A7B4FC>Смерти:</#A7B4FC> <white>{deaths}</white>"
+      - ""
+      - "  <gradient:#6D84FC:#FFFFFF>ds-craft.ru</gradient>"

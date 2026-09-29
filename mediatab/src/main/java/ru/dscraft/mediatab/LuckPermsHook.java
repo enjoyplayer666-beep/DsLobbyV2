@@ -1,0 +1,40 @@
+package ru.dscraft.mediatab;
+
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
+import org.bukkit.entity.Player;
+
+/** Префикс, суффикс и вес игрока из LuckPerms. Создаётся только если LuckPerms установлен. */
+final class LuckPermsHook {
+
+    private final LuckPerms api = LuckPermsProvider.get();
+
+    private User user(Player player) {
+        return api.getUserManager().getUser(player.getUniqueId());
+    }
+
+    String prefix(Player player) {
+        User user = user(player);
+        String p = user == null ? null : user.getCachedData().getMetaData().getPrefix();
+        return p == null ? "" : p;
+    }
+
+    String suffix(Player player) {
+        User user = user(player);
+        String s = user == null ? null : user.getCachedData().getMetaData().getSuffix();
+        return s == null ? "" : s;
+    }
+
+    /** Наибольший weight среди групп, активных у игрока в его текущем контексте (мир и т.д.). */
+    int weight(Player player) {
+        User user = user(player);
+        if (user == null) return 0;
+        int max = 0;
+        for (Group group : user.getInheritedGroups(api.getContextManager().getQueryOptions(player))) {
+            max = Math.max(max, group.getWeight().orElse(0));
+        }
+        return max;
+    }
+}

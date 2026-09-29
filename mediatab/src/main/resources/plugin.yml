@@ -1,0 +1,15 @@
+name: MediaTab
+version: '1.0'
+main: ru.dscraft.mediatab.MediaTabPlugin
+api-version: '1.21'
+author: DestroyCraft
+description: Таб (шапка, низ, строки игроков, ники над головой) и скорборд справа
+softdepend: [LuckPerms, PlaceholderAPI, DestroyLobby, DestroyChat]
+commands:
+  mediatab:
+    description: Перезагрузка конфига MediaTab
+    usage: /mediatab reload
+    permission: mediatab.admin
+permissions:
+  mediatab.admin:
+    default: op
