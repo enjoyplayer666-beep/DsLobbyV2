@@ -121,7 +121,11 @@ public class LobbyJumpListener implements Listener {
         if (last != null && now - last < configManager.jumpCooldownTicks()) return;
         lastJumpTick.put(player.getUniqueId(), now);
 
-        launch(player);
+        // через тик, когда клиент уже оторвался от земли своим прыжком: иначе серверная скорость
+        // и ванильный прыжок срабатывают одновременно и игрока дёргает
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (player.isOnline() && configManager.isLobbyWorld(player.getWorld().getName())) launch(player);
+        });
     }
 
     private void launch(Player player) {
@@ -143,7 +147,7 @@ public class LobbyJumpListener implements Listener {
             // прыжок туда, куда смотришь: по направлению взгляда, но всегда с отрывом от земли
             // смотришь вверх - высоко вверх; ниже - ниже и дальше в ту сторону, куда смотришь
             double powerDown = plugin.getConfig().getDouble("lobby-jump.look.power-down", 0.9);
-            double powerUp = plugin.getConfig().getDouble("lobby-jump.look.power-up", 1.8);
+            double powerUp = plugin.getConfig().getDouble("lobby-jump.look.power-up", 1.6);
             double minUp = plugin.getConfig().getDouble("lobby-jump.look.min-up", 0.45);
             velocity = loc.getDirection().normalize().multiply(lerp(powerDown, powerUp, look));
             if (velocity.getY() < minUp) velocity.setY(minUp);
