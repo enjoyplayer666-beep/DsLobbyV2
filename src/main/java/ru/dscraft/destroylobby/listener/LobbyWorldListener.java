@@ -90,7 +90,7 @@ public class LobbyWorldListener implements Listener {
         if (!f.exists() && !empty(p)) {
             folder.mkdirs();
             YamlConfiguration y = new YamlConfiguration();
-            y.set("contents", List.of(p.getInventory().getContents()));
+            y.set("contents", java.util.Arrays.asList(p.getInventory().getContents())); // asList - пустые слоты (null) допустимы
             y.set("level", p.getLevel());
             y.set("exp", (double) p.getExp());
             try {
