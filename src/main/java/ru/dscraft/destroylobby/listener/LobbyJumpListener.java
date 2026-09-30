@@ -138,7 +138,17 @@ public class LobbyJumpListener implements Listener {
         double dirX = -Math.sin(yawRad);
         double dirZ = Math.cos(yawRad);
 
-        player.setVelocity(new Vector(dirX * forward, vertical, dirZ * forward));
+        Vector velocity;
+        if ("look".equalsIgnoreCase(plugin.getConfig().getString("lobby-jump.mode", "look"))) {
+            // прыжок туда, куда смотришь: по направлению взгляда, но всегда с отрывом от земли
+            double power = plugin.getConfig().getDouble("lobby-jump.look.power", 1.5);
+            double minUp = plugin.getConfig().getDouble("lobby-jump.look.min-up", 0.5);
+            velocity = loc.getDirection().normalize().multiply(power);
+            if (velocity.getY() < minUp) velocity.setY(minUp);
+        } else {
+            velocity = new Vector(dirX * forward, vertical, dirZ * forward);
+        }
+        player.setVelocity(velocity);
         player.setFallDistance(0f);
 
         // эффекты только в момент прыжка, на месте отрыва - за игроком не летят
