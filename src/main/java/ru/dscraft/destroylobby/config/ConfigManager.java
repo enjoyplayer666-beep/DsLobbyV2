@@ -223,8 +223,9 @@ public class ConfigManager {
         double y = cfg.getDouble("lobby-protection.spawn.y", world.getSpawnLocation().getY());
         double z = cfg.getDouble("lobby-protection.spawn.z", world.getSpawnLocation().getZ());
         float yaw = (float) cfg.getDouble("lobby-protection.spawn.yaw", 0.0);
-        float pitch = (float) cfg.getDouble("lobby-protection.spawn.pitch", 0.0);
-        return new Location(world, x, y, z, yaw, pitch);
+        // ровно по центру блока, взгляд прямо (не вверх/вниз) и строго по стороне света
+        yaw = Math.round(yaw / 90f) * 90f;
+        return new Location(world, Math.floor(x) + 0.5, y, Math.floor(z) + 0.5, yaw, 0f);
     }
 
     public boolean lobbyBlockBuild() {
