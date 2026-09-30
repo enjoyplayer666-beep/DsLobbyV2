@@ -55,6 +55,12 @@ public class LobbyWorldListener implements Listener {
         this.configManager = configManager;
         this.folder = new File(plugin.getDataFolder(), "inventories");
         for (World w : Bukkit.getWorlds()) clearWeather(w);
+        // страховка: если какой-то плагин вернул вещи в лобби (вход, /hub, выдача) - снова убрать
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (!op(p) && lobby(p.getWorld()) && !empty(p)) stash(p);
+            }
+        }, 40L, 20L);
     }
 
     private boolean lobby(World w) {

@@ -141,9 +141,9 @@ public class LobbyJumpListener implements Listener {
         player.setVelocity(new Vector(dirX * forward, vertical, dirZ * forward));
         player.setFallDistance(0f);
 
+        // эффекты только в момент прыжка, на месте отрыва - за игроком не летят
         spawnLaunchEffects(player, loc);
         playSound(player, loc);
-        startTrail(player);
     }
 
     private static double lerp(double a, double b, double t) {

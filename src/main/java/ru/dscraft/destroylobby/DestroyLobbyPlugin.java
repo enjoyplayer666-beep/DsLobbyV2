@@ -167,11 +167,12 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         if (current instanceof Number n && n.intValue() >= latest) return;
         for (String path : new String[]{"lobby-jump.cooldown-ticks", "lobby-jump.particles.burst-count",
                 "lobby-jump.particles.ring-points", "lobby-jump.particles.trail-count",
-                "lobby-jump.particles.landing-count"}) {
+                "lobby-jump.particles.landing-count", "lobby-jump.vertical.min", "lobby-jump.vertical.max",
+                "lobby-jump.forward.min", "lobby-jump.forward.max"}) {
             cfg.set(path, cfg.getDefaults().get(path));
         }
         cfg.set("lobby-jump.settings-version", latest);
-        getLogger().info("Прыжок в лобби: пауза 1 секунда и меньше синего огня.");
+        getLogger().info("Прыжок в лобби: новые настройки силы прыжка.");
     }
 
     /**
