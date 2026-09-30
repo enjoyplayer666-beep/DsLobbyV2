@@ -87,6 +87,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new PlayerConnectionListener(this, statsManager, visibilityManager), this);
         getServer().getPluginManager().registerEvents(new GameWelcomeListener(this, configManager), this);
+        getServer().getPluginManager().registerEvents(new ru.dscraft.destroylobby.listener.LobbyWorldListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(new UnknownCommandListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerTimeMenuListener(this), this);
         TeleportCommandListener teleports = new TeleportCommandListener(this, configManager);

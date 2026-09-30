@@ -65,7 +65,7 @@ public class LobbyProtectionListener implements Listener {
     public void onBreak(BlockBreakEvent event) {
         if (!configManager.lobbyProtectionEnabled() || !configManager.lobbyBlockBreak()) return;
         Player player = event.getPlayer();
-        if (bypasses(player) || !inLobby(player)) return;
+        if (player.isOp() || !inLobby(player)) return; // ломать/ставить в лобби - только оп
         event.setCancelled(true);
         deny(player, configManager.lobbyBlockedActionMessage());
     }
@@ -74,7 +74,7 @@ public class LobbyProtectionListener implements Listener {
     public void onPlace(BlockPlaceEvent event) {
         if (!configManager.lobbyProtectionEnabled() || !configManager.lobbyBlockBuild()) return;
         Player player = event.getPlayer();
-        if (bypasses(player) || !inLobby(player)) return;
+        if (player.isOp() || !inLobby(player)) return; // ломать/ставить в лобби - только оп
         event.setCancelled(true);
         deny(player, configManager.lobbyBlockedActionMessage());
     }
