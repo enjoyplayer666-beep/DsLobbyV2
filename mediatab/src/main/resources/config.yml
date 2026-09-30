@@ -6,6 +6,9 @@
 #  При первом запуске настройки таба и скорборда переносятся сами из DestroyLobby и DestroyChat.
 # =====================================================================
 
+# не трогать: по нему плагин обновляет старый config.yml
+config-version: 2
+
 worlds:
   # имя мира лобби на сервере (как в /mv list)
   lobby: "world"
@@ -25,7 +28,7 @@ tab:
     # каждая строка списка = строка в табе, "" = пустая строка
     header:
       - "<gradient:#FB786F:#FDCB6B>DestroyCraft</gradient>"
-      - "<#FDBD6C>{world}</#FDBD6C>"
+      - "<#FDBD6C>SkyPvP</#FDBD6C>"
       - ""
     footer:
       - ""
@@ -34,14 +37,14 @@ tab:
       - "<gradient:#FB786F:#FDCB6B>ТГ канал</gradient> <white>•</white> <white>t.me/dscraft</white>"
       - ""
       - "<#FDBD6C>ds-craft.ru</#FDBD6C>"
-    # один и тот же префикс у ВСЕХ в лобби.  - оранжевый смайлик из ресурс-пака.
-    shared-prefix: "<#FC8F6E></#FC8F6E> "
+    # один и тот же префикс у ВСЕХ в лобби: ☺ - оранжевый смайлик
+    shared-prefix: "<#FC8F6E>☺</#FC8F6E> "
     shared-name-color: "&7"
 
   game:
     header:
       - "<bold><gradient:#6D84FC:#FFFFFF>DestroyCraft</gradient></bold>"
-      - "<white>{world}</white>"
+      - "<white>SkyPvP</white>"
       - ""
     footer:
       - ""
@@ -76,7 +79,7 @@ scoreboard:
   health-mode: "hearts"
   date-format: "dd.MM.yyyy"
   game:
-    title: "<gradient:#6D84FC:#FFFFFF>{world}</gradient>"
+    title: "<gradient:#6D84FC:#FFFFFF>SkyPvP</gradient>"
     # пробелы в начале строки - чтобы дата и сайт стояли по центру
     lines:
       - "    <#A1B0C7>{date}</#A1B0C7>"

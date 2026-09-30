@@ -34,6 +34,7 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
         boolean freshConfig = !new File(getDataFolder(), "config.yml").exists();
         saveDefaultConfig();
         if (freshConfig) importOldSettings();
+        migrate();
 
         settings = new Settings(this);
         boards = new PlayerBoardService();
@@ -162,5 +163,23 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
         }
         sender.sendMessage("§e/mediatab reload §7- перезагрузить конфиг");
         return true;
+    }
+
+    /**
+     * config-version 2: смайлик лобби - символ ☺ из шрифта игры (прежний символ не из пака показывался квадратом);
+     * вверху таба и скорборда всегда "SkyPvP", а не имя мира.
+     */
+    private void migrate() {
+        var cfg = getConfig();
+        if (cfg.getInt("config-version", 1) >= 2) return;
+        cfg.set("tab.lobby.shared-prefix", cfg.getString("tab.lobby.shared-prefix", "").replace("\uE030", "☺"));
+        for (String path : new String[]{"tab.lobby.header", "tab.game.header"}) {
+            List<String> lines = new ArrayList<>();
+            for (String l : cfg.getStringList(path)) lines.add(l.replace("{world}", "SkyPvP"));
+            cfg.set(path, lines);
+        }
+        cfg.set("scoreboard.game.title", cfg.getString("scoreboard.game.title", "").replace("{world}", "SkyPvP"));
+        cfg.set("config-version", 2);
+        saveConfig();
     }
 }
