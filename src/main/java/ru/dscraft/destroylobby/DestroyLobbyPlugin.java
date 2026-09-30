@@ -88,6 +88,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                 new PlayerConnectionListener(this, statsManager, visibilityManager), this);
         getServer().getPluginManager().registerEvents(new GameWelcomeListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(new ru.dscraft.destroylobby.listener.LobbyWorldListener(this, configManager), this);
+        getServer().getPluginManager().registerEvents(new ru.dscraft.destroylobby.listener.LobbyPortalListener(this), this);
         getServer().getPluginManager().registerEvents(new UnknownCommandListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerTimeMenuListener(this), this);
         TeleportCommandListener teleports = new TeleportCommandListener(this, configManager);
@@ -145,7 +146,40 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                 return true;
             }
 
-            sender.sendMessage("§7Использование: /destroylobby reload|setspawn");
+            if (args.length >= 2 && args[0].equalsIgnoreCase("portal")) {
+                Player player = requirePlayer(sender);
+                if (player == null) return true;
+                org.bukkit.Location l = player.getLocation();
+                var cfg = getConfig();
+                switch (args[1].toLowerCase(java.util.Locale.ROOT)) {
+                    case "pos1", "pos2" -> {
+                        String k = "lobby-portal." + args[1].toLowerCase(java.util.Locale.ROOT);
+                        cfg.set("lobby-portal.world", l.getWorld().getName());
+                        cfg.set(k + ".x", l.getBlockX());
+                        cfg.set(k + ".y", l.getBlockY());
+                        cfg.set(k + ".z", l.getBlockZ());
+                        sender.sendMessage("§a[DestroyLobby] Угол портала " + args[1] + " поставлен: " + l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ());
+                    }
+                    case "target" -> {
+                        cfg.set("lobby-portal.target.world", l.getWorld().getName());
+                        cfg.set("lobby-portal.target.x", l.getBlockX() + 0.5);
+                        cfg.set("lobby-portal.target.y", l.getY());
+                        cfg.set("lobby-portal.target.z", l.getBlockZ() + 0.5);
+                        cfg.set("lobby-portal.target.yaw", Math.round(l.getYaw() / 90f) * 90f);
+                        cfg.set("lobby-portal.target.pitch", 0f);
+                        sender.sendMessage("§a[DestroyLobby] Точка, куда ведёт портал, поставлена здесь.");
+                    }
+                    case "on", "off" -> {
+                        cfg.set("lobby-portal.enabled", args[1].equalsIgnoreCase("on"));
+                        sender.sendMessage("§a[DestroyLobby] Портал " + (args[1].equalsIgnoreCase("on") ? "включён" : "выключен") + ".");
+                    }
+                    default -> sender.sendMessage("§7/destroylobby portal pos1|pos2|target|on|off");
+                }
+                saveConfig();
+                return true;
+            }
+
+            sender.sendMessage("§7Использование: /destroylobby reload|setspawn|portal <pos1|pos2|target|on|off>");
             return true;
         }
 

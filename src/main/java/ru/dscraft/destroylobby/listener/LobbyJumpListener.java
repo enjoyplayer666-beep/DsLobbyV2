@@ -141,9 +141,11 @@ public class LobbyJumpListener implements Listener {
         Vector velocity;
         if ("look".equalsIgnoreCase(plugin.getConfig().getString("lobby-jump.mode", "look"))) {
             // прыжок туда, куда смотришь: по направлению взгляда, но всегда с отрывом от земли
-            double power = plugin.getConfig().getDouble("lobby-jump.look.power", 1.5);
-            double minUp = plugin.getConfig().getDouble("lobby-jump.look.min-up", 0.5);
-            velocity = loc.getDirection().normalize().multiply(power);
+            // смотришь вверх - высоко вверх; ниже - ниже и дальше в ту сторону, куда смотришь
+            double powerDown = plugin.getConfig().getDouble("lobby-jump.look.power-down", 0.9);
+            double powerUp = plugin.getConfig().getDouble("lobby-jump.look.power-up", 1.8);
+            double minUp = plugin.getConfig().getDouble("lobby-jump.look.min-up", 0.45);
+            velocity = loc.getDirection().normalize().multiply(lerp(powerDown, powerUp, look));
             if (velocity.getY() < minUp) velocity.setY(minUp);
         } else {
             velocity = new Vector(dirX * forward, vertical, dirZ * forward);
