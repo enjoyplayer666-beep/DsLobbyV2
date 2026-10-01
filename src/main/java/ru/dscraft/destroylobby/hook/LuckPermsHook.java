@@ -105,7 +105,8 @@ public class LuckPermsHook {
         if (user == null) return false;
 
         int priority = configManager.customPrefixPriority();
-        removeCustomPrefixNodes(user, priority);
+        // один личный префикс на все миры - старые (в т.ч. привязанные к миру) убираем
+        removeAllOwnPrefixes(user);
 
         PrefixNode node = PrefixNode.builder(rawPrefix, priority).build();
         DataMutateResult result = user.data().add(node);
@@ -118,7 +119,7 @@ public class LuckPermsHook {
         User user = getUser(player);
         if (user == null) return false;
 
-        boolean removed = removeCustomPrefixNodes(user, configManager.customPrefixPriority());
+        boolean removed = removeAllOwnPrefixes(user);
         if (removed) {
             api.getUserManager().saveUser(user);
         }
@@ -135,7 +136,7 @@ public class LuckPermsHook {
     public CompletableFuture<Boolean> resetPrefixes(UUID uuid) {
         if (api == null) return CompletableFuture.completedFuture(false);
         return api.getUserManager().loadUser(uuid).thenApply(user -> {
-            boolean removed = removeCustomPrefixNodes(user, configManager.customPrefixPriority());
+            boolean removed = removeAllOwnPrefixes(user);
             Set<MetaNode> metas = user.getNodes(NodeType.META).stream()
                     .filter(n -> n.getMetaKey().equals(CHAT_PREFIX_META))
                     .collect(Collectors.toSet());
@@ -146,11 +147,13 @@ public class LuckPermsHook {
         });
     }
 
-    private boolean removeCustomPrefixNodes(User user, int priority) {
-        Set<PrefixNode> toRemove = user.getNodes(NodeType.PREFIX).stream()
-                .filter(n -> n.getPriority() == priority
-                        || n.getPriority() == ConfigManager.LEGACY_CUSTOM_PREFIX_PRIORITY)
-                .collect(Collectors.toSet());
+    /**
+     * Сброс: все личные префиксы игрока - с любым приоритетом и в любом мире/контексте
+     * (раньше снимался только с приоритетом customprefix, и в лобби мог остаться другой).
+     * Префикс привилегии не трогается - он на группе, а не на игроке.
+     */
+    private boolean removeAllOwnPrefixes(User user) {
+        Set<PrefixNode> toRemove = user.getNodes(NodeType.PREFIX).stream().collect(Collectors.toSet());
         for (PrefixNode node : toRemove) {
             user.data().remove(node);
         }
