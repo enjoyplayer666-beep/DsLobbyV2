@@ -169,6 +169,10 @@ final class GlowMenu implements CommandExecutor, Listener {
     /** Голова цвета (текстура из glow.heads.<цвет>) или блок того же цвета. */
     private ItemStack icon(Glow g) {
         String texture = plugin.getConfig().getString("glow.heads." + g.key(), "");
+        // пусто в конфиге сервера - берём голову, вшитую в плагин
+        if ((texture == null || texture.isBlank()) && plugin.getConfig().getDefaults() != null) {
+            texture = plugin.getConfig().getDefaults().getString("glow.heads." + g.key(), "");
+        }
         if (texture == null || texture.isBlank()) return new ItemStack(g.fallback());
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta meta = (SkullMeta) head.getItemMeta();
