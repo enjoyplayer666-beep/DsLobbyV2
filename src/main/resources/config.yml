@@ -133,10 +133,12 @@ ptime-menu:
     - "<#8A8A8A>4. Полночь <#C8C5B8>[<click:run_command:/ptime midnight><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
     - "<#8A8A8A>5. Сбросить <#C8C5B8>[<click:run_command:/ptime reset><hover:show_text:'<gray>Нажми'><white>Клик</white></hover></click>]</#C8C5B8>"
 
-# /hub, /lobby - в лобби; /spawn - на спавн мира, где игрок сейчас
+# /hub, /lobby - в лобби; /spawn - на спавн мира spawn-world из любого мира, в лобби - на точку лобби
 teleport:
   # перехватывать /spawn у Essentials (у него своя точка спавна)
   override-spawn: true
+  # куда ведёт /spawn вне лобби ("" - на спавн мира, где игрок сейчас)
+  spawn-world: "world_skypvp"
   hub-message: "<gray>Вы телепортированы в <#7B8FFB>лобби</#7B8FFB>.</gray>"
   spawn-message: "<gray>Вы телепортированы на <#7B8FFB>спавн</#7B8FFB>.</gray>"
 

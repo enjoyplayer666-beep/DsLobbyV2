@@ -19,6 +19,9 @@ commands:
     description: Телепорт в лобби
     usage: /hub
     aliases: [lobby]
+  spawn:
+    description: Телепорт на спавн SkyPvP (в лобби - на точку лобби)
+    usage: /spawn
   prefix:
     description: Личный префикс и префикс для чата
     usage: /prefix set <текст> | /prefix reset [ник] | /prefix chat <текст|reset>

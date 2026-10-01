@@ -1,5 +1,6 @@
 package ru.dscraft.destroylobby.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -17,7 +18,7 @@ import ru.dscraft.destroylobby.util.ColorUtil;
 import java.util.Locale;
 
 /**
- * /hub и /lobby - в лобби, /spawn - на спавн мира, где игрок сейчас (в лобби - точка лобби).
+ * /hub и /lobby - в лобби, /spawn - на спавн teleport.spawn-world из любого мира (в лобби - точка лобби).
  * /spawn перехватывается раньше Essentials (у него своя /spawn), это выключается teleport.override-spawn.
  */
 public class TeleportCommandListener implements Listener, CommandExecutor {
@@ -30,14 +31,15 @@ public class TeleportCommandListener implements Listener, CommandExecutor {
         this.configManager = configManager;
     }
 
-    /** /hub, /lobby */
+    /** /hub, /lobby, /spawn */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("Только для игроков.");
             return true;
         }
-        toLobby(player);
+        if (command.getName().equalsIgnoreCase("spawn")) toWorldSpawn(player);
+        else toLobby(player);
         return true;
     }
 
@@ -62,9 +64,12 @@ public class TeleportCommandListener implements Listener, CommandExecutor {
 
     private void toWorldSpawn(Player player) {
         World world = player.getWorld();
+        String spawnWorld = plugin.getConfig().getString("teleport.spawn-world", "world_skypvp");
+        World game = spawnWorld == null || spawnWorld.isEmpty() ? null : Bukkit.getWorld(spawnWorld);
+        if (game == null) game = world;
         Location target = configManager.isLobbyWorld(world.getName())
                 ? configManager.getLobbySpawnLocation()
-                : world.getSpawnLocation().add(0.5, 0, 0.5);
+                : game.getSpawnLocation().add(0.5, 0, 0.5);
         if (target == null) target = world.getSpawnLocation();
         player.teleport(target);
         send(player, "teleport.spawn-message", "<gray>Вы телепортированы на <#7B8FFB>спавн</#7B8FFB>.</gray>");

@@ -94,6 +94,14 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         TeleportCommandListener teleports = new TeleportCommandListener(this, configManager);
         getServer().getPluginManager().registerEvents(teleports, this);
         if (getCommand("hub") != null) getCommand("hub").setExecutor(teleports);
+        if (getCommand("spawn") != null) {
+            getCommand("spawn").setExecutor(teleports);
+            // /spawn есть и у Essentials - забираем себе, чтобы в чате он был известной командой (не красным)
+            getServer().getScheduler().runTask(this, () -> {
+                org.bukkit.command.PluginCommand ours = getCommand("spawn");
+                if (ours != null) getServer().getCommandMap().getKnownCommands().put("spawn", ours);
+            });
+        }
         getServer().getPluginManager().registerEvents(
                 new LobbyJumpListener(this, configManager), this);
         getServer().getPluginManager().registerEvents(
