@@ -148,7 +148,20 @@ public class LobbyProtectionListener implements Listener {
     /** Список команд для "/" пересылается при смене мира: в лобби - урезанный, в игре - обычный. */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldChange(PlayerChangedWorldEvent event) {
-        event.getPlayer().updateCommands();
+        refreshCommandsLater(event.getPlayer(), 2L);
+    }
+
+    /** При входе список "/" уходит игроку раньше, чем он оказывается в лобби и получает права - пересылаем. */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+        refreshCommandsLater(event.getPlayer(), 10L);
+        refreshCommandsLater(event.getPlayer(), 40L);
+    }
+
+    private void refreshCommandsLater(Player player, long ticks) {
+        org.bukkit.Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (player.isOnline()) player.updateCommands();
+        }, ticks);
     }
 
     // ---- команды: разрешён только вход в портал (обычно это физический блок, не команда) ----
