@@ -23,7 +23,7 @@ final class Hooks {
 
     static String coins(Player p) {
         // коины теперь в MediaCoins; нет его - старые из DestroyLobby
-        Plugin mc = Bukkit.getPluginManager().getPlugin("MediaCoins");
+        Plugin mc = Bukkit.getPluginManager().getPlugin("MediaEconomy");
         if (mc != null && mc.isEnabled()) {
             try {
                 Class<?> api = Class.forName("ru.dscraft.mediacoins.CoinsApi", true, mc.getClass().getClassLoader());
@@ -80,7 +80,7 @@ final class Hooks {
 
     /** Выбранный титул игрока из MediaItems (ru.dscraft.mediaitems.TitlesApi) или пусто. */
     static synchronized net.kyori.adventure.text.Component title(Player p) {
-        Plugin items = Bukkit.getPluginManager().getPlugin("MediaItems");
+        Plugin items = Bukkit.getPluginManager().getPlugin("DestroySkyPvP");
         if (items == null || !items.isEnabled()) return net.kyori.adventure.text.Component.empty();
         ClassLoader cl = items.getClass().getClassLoader();
         try {

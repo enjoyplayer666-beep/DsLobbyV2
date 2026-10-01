@@ -30,6 +30,8 @@ import java.util.List;
 
 public final class DestroyLobbyPlugin extends JavaPlugin {
 
+    private ru.dscraft.destroylobby.module.Modules modules;
+
     private static DestroyLobbyPlugin instance;
 
     /** Версия формата config.yml. Старые конфиги (без этого ключа) заменяются новым. */
@@ -123,10 +125,16 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
         visibilityManager.updateAll();
 
         getLogger().info("DestroyLobby включен.");
+
+        // модули в этом же jar: таб/скорборд и MOTD (папки plugins/DestroyLobby/MediaTab, /DestroyCraftMOTD)
+        modules = new ru.dscraft.destroylobby.module.Modules(this);
+        modules.enable(ru.dscraft.mediatab.MediaTabPlugin::new, "MediaTab", "mediatab", "glow");
+        modules.enable(com.destroycraft.motd.DestroyCraftMotdPlugin::new, "DestroyCraftMOTD", "destroymotd");
     }
 
     @Override
     public void onDisable() {
+        if (modules != null) modules.disableAll();
         if (visibilityManager != null) visibilityManager.showEveryone();
         if (statsManager != null) {
             statsManager.saveAll();

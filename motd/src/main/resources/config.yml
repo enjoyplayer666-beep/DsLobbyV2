@@ -1,0 +1,24 @@
+# =====================================================
+#  DestroyCraftMOTD — конфигурация
+#  Формат текста — MiniMessage (поддерживает <color:#RRGGBB>,
+#  <gradient:...>, <b>, <i> и т.д.)
+# =====================================================
+
+# Строки MOTD (максимум 2 строки в ванильном списке серверов).
+# Цвета ниже подобраны пипеткой по вашему скриншоту 1-в-1.
+motd:
+  line1: "<gradient:#FB786F:#FFCC66><b><i>DestroyCraft</i></b></gradient> <gray>•</gray> <gray><i>Версия:</i></gray> <i><color:#55FFFF>1.21.10</color></i>"
+  line2: "<i><color:#BE67F2>Кланы</color></i> <white>•</white> <i><color:#FFF967>Новая броня</color></i> <white>•</white> <i><color:#FF3459>PvP ранги</color></i> <white>•</white> <i><color:#7EFFB9>Статистика</color></i>"
+
+# Иконка сервера (favicon 64x64 PNG).
+# Если icon-path пустой — плагин попробует использовать server-icon.png
+# из корня сервера (как обычно делает Paper), либо icon.png из папки плагина.
+icon:
+  enabled: true
+  icon-path: "icon.png"
+
+# "Резиновый" (фейковый) максимум игроков в списке серверов, как на скрине (11/777).
+# Реальный лимит из server.properties при этом не меняется.
+fake-max-players:
+  enabled: true
+  max: 777

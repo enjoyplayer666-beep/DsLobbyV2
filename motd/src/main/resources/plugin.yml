@@ -1,0 +1,14 @@
+name: DestroyCraftMOTD
+version: '1.0.0'
+main: com.destroycraft.motd.DestroyCraftMotdPlugin
+api-version: '1.21'
+author: DestroyCraft
+description: Кастомное MOTD (RGB/градиент) и иконка сервера в стиле DestroyCraft
+commands:
+  destroymotd:
+    description: Перезагрузить конфигурацию MOTD
+    usage: /destroymotd reload
+    permission: destroycraft.motd.reload
+permissions:
+  destroycraft.motd.reload:
+    default: op

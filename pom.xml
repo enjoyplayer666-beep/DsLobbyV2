@@ -69,8 +69,43 @@
                     <exclude>plugin.yml</exclude>
                 </excludes>
             </resource>
+
+            <resource>
+                <directory>mediatab/src/main/resources</directory>
+                <targetPath>MediaTab</targetPath>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>motd/src/main/resources</directory>
+                <targetPath>DestroyCraftMOTD</targetPath>
+                <excludes>
+                    <exclude>plugin.yml</exclude>
+                </excludes>
+            </resource>
         </resources>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>add-module-sources</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>mediatab/src/main/java</source>
+                                <source>motd/src/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>

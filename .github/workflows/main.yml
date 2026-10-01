@@ -22,17 +22,9 @@ jobs:
       - name: Собрать плагин
         run: mvn -B clean package
 
-      - name: Собрать MediaTab (таб и скорборд)
-        run: mvn -B -f mediatab/pom.xml clean package
-
       - name: Выложить jar
         uses: actions/upload-artifact@v4
         with:
           name: DestroyLobby
           path: target/*.jar
 
-      - name: Выложить MediaTab
-        uses: actions/upload-artifact@v4
-        with:
-          name: MediaTab
-          path: mediatab/target/MediaTab.jar

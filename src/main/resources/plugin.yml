@@ -1,11 +1,18 @@
 name: DestroyLobby
-version: '${project.version}'
+version: ${project.version}
 main: ru.dscraft.destroylobby.DestroyLobbyPlugin
 api-version: '1.21'
 author: DestroyCraft
-softdepend: [LuckPerms, PlaceholderAPI, Multiverse-Core, AdvancedPortals]
-loadbefore: [DestroyChat]
-
+softdepend:
+- LuckPerms
+- PlaceholderAPI
+- Multiverse-Core
+- AdvancedPortals
+- MediaEconomy
+- DestroySkyPvP
+- DestroyPvP
+loadbefore:
+- DestroyChat
 commands:
   destroylobby:
     description: Перезагрузка конфига и точка спавна лобби
@@ -18,14 +25,25 @@ commands:
   hub:
     description: Телепорт в лобби
     usage: /hub
-    aliases: [lobby]
+    aliases:
+    - lobby
   spawn:
     description: Телепорт на спавн SkyPvP (в лобби - на точку лобби)
     usage: /spawn
   prefix:
     description: Личный префикс и префикс для чата
     usage: /prefix set <текст> | /prefix reset [ник] | /prefix chat <текст|reset>
-
+  mediatab:
+    description: Перезагрузка конфига MediaTab
+    usage: /mediatab reload
+    permission: mediatab.admin
+  glow:
+    description: Меню свечения
+    usage: /glow
+  destroymotd:
+    description: Перезагрузить конфигурацию MOTD
+    usage: /destroymotd reload
+    permission: destroycraft.motd.reload
 permissions:
   destroylobby.admin:
     default: op
@@ -44,3 +62,8 @@ permissions:
     default: op
   destroylobby.prefix.format:
     default: false
+  mediatab.admin:
+    default: op
+  destroycraft.motd.reload:
+    default: op
+description: Лобби DestroyCraft + модули MediaTab (таб, скорборд, /glow) и DestroyCraftMOTD (MOTD)

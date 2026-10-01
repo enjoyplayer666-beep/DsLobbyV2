@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** MediaTab: таб (шапка, низ, строки игроков, ники над головой) и скорборд справа. */
-public class MediaTabPlugin extends JavaPlugin implements Listener {
+public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implements Listener {
 
     private Settings settings;
     private PlayerBoardService boards;
