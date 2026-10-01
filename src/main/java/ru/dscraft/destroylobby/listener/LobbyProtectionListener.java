@@ -12,7 +12,9 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import ru.dscraft.destroylobby.DestroyLobbyPlugin;
 import ru.dscraft.destroylobby.config.ConfigManager;
@@ -130,6 +132,23 @@ public class LobbyProtectionListener implements Listener {
         if (!(event.getEntity() instanceof Player player)) return;
         if (bypasses(player) || !inLobby(player)) return;
         event.setCancelled(true);
+    }
+
+    // ---- Tab в лобби: только /login и /changepassword (кроме опов) ----
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCommandSend(PlayerCommandSendEvent event) {
+        Player player = event.getPlayer();
+        if (player.isOp() || !inLobby(player)) return;
+        List<String> visible = configManager.lobbyTabCommands().stream()
+                .map(c -> c.toLowerCase(Locale.ROOT).replace("/", "")).toList();
+        event.getCommands().removeIf(c -> !visible.contains(c.toLowerCase(Locale.ROOT)));
+    }
+
+    /** Список команд для "/" пересылается при смене мира: в лобби - урезанный, в игре - обычный. */
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onWorldChange(PlayerChangedWorldEvent event) {
+        event.getPlayer().updateCommands();
     }
 
     // ---- команды: разрешён только вход в портал (обычно это физический блок, не команда) ----

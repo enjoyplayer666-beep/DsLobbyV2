@@ -260,6 +260,12 @@ public class ConfigManager {
         return cfg.getStringList("lobby-protection.allowed-commands");
     }
 
+    /** Что видно по "/" в лобби всем, кроме опов. */
+    public List<String> lobbyTabCommands() {
+        List<String> list = cfg.getStringList("lobby-protection.tab-commands");
+        return list.isEmpty() ? List.of("login", "changepassword") : list;
+    }
+
     public String lobbyBlockedActionMessage() {
         return cfg.getString("lobby-protection.blocked-action-message",
                 "<yellow>❗</yellow> <gray>В лобби это действие недоступно</gray>");

@@ -48,7 +48,9 @@ public class ChatListener implements Listener {
         event.viewers().removeIf(audience ->
                 audience instanceof Player viewer
                         && !viewer.equals(sender)
-                        && !viewer.hasPermission(seeAll)
-                        && !visibilityManager.sameBucket(sender, viewer));
+                        // в лобби чат (ни локальный, ни глобальный) не видит никто, кроме опов
+                        && (configManager.isLobbyWorld(viewer.getWorld().getName())
+                        ? !viewer.isOp()
+                        : !viewer.hasPermission(seeAll) && !visibilityManager.sameBucket(sender, viewer)));
     }
 }
