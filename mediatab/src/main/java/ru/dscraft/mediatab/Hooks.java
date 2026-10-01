@@ -22,6 +22,15 @@ final class Hooks {
     }
 
     static String coins(Player p) {
+        // коины теперь в MediaCoins; нет его - старые из DestroyLobby
+        Plugin mc = Bukkit.getPluginManager().getPlugin("MediaCoins");
+        if (mc != null && mc.isEnabled()) {
+            try {
+                Class<?> api = Class.forName("ru.dscraft.mediacoins.CoinsApi", true, mc.getClass().getClassLoader());
+                return String.valueOf(api.getMethod("coins", java.util.UUID.class).invoke(null, p.getUniqueId()));
+            } catch (Exception ignored) {
+            }
+        }
         return call(() -> coins, p);
     }
 
