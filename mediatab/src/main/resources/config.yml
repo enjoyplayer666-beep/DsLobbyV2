@@ -62,6 +62,15 @@ tab:
     # иначе staff-name-color у команды проекта и name-color у остальных
     name-color: "&7"
     staff-name-color: "&f"
+    # ник обычного игрока (без привилегии): "⚔ ник"
+    default-name-color: "&#CDCDFF"
+    # Оформление групп в табе вместо префикса/суффикса LuckPerms: первая группа сверху вниз.
+    # prefix - перед ником, name-style - цвет/стиль ника, suffix - после ника. Свой /prefix set главнее.
+    group-formats:
+      elitesp:
+        prefix: "&f⌜&#8D73FC&oElite&f⌟ "
+        name-style: "&7&o"
+        suffix: "&6✔"
     # группы команды проекта (белый ник)
     staff-groups: [curator, admin, manager, moderator, media, mediajr]
 

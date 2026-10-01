@@ -27,6 +27,12 @@ final class LuckPermsHook {
         return s == null ? "" : s;
     }
 
+    /** Свой префикс игрока (/prefix set) - он главнее оформления группы. */
+    boolean hasOwnPrefix(Player player) {
+        User user = user(player);
+        return user != null && !user.getNodes(net.luckperms.api.node.NodeType.PREFIX).isEmpty();
+    }
+
     /** Наибольший weight среди групп, активных у игрока в его текущем контексте (мир и т.д.). */
     int weight(Player player) {
         User user = user(player);

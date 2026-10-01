@@ -33,6 +33,9 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         boolean freshConfig = !new File(getDataFolder(), "config.yml").exists();
         saveDefaultConfig();
+        // новые настройки (group-formats, default-name-color) дописываются в старый config.yml
+        getConfig().options().copyDefaults(true);
+        saveConfig();
         if (freshConfig) importOldSettings();
         migrate();
 

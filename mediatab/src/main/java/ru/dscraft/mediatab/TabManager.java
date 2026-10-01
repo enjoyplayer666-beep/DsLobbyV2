@@ -110,7 +110,19 @@ final class TabManager {
             NameStyle.Split split = NameStyle.split(rawPrefix);
             String nickStyle = split.nickStyle();
             rawPrefix = split.prefix() == null ? "" : split.prefix();
-            if (rawPrefix.isEmpty()) rawPrefix = settings.defaultPrefix();
+            // оформление группы из tab.game.group-formats (Elite и т.п.), если нет своего /prefix set
+            Settings.GroupFormat format = luckPerms != null && luckPerms.hasOwnPrefix(player)
+                    ? null : settings.groupFormat(g -> player.hasPermission("group." + g));
+            if (format != null) {
+                if (format.prefix() != null) rawPrefix = format.prefix();
+                if (format.nameStyle() != null && !format.nameStyle().isBlank()) nickStyle = format.nameStyle();
+                if (format.suffix() != null) rawSuffix = format.suffix();
+            }
+            if (rawPrefix.isEmpty()) {
+                rawPrefix = settings.defaultPrefix();
+                // обычный игрок: "⚔ ник" - ник своим цветом
+                if (nickStyle == null && !isStaff(player)) nickStyle = settings.defaultNameColor();
+            }
             if (!rawSuffix.isEmpty() && settings.suffixAutoSpace() && !rawSuffix.startsWith(" ")) {
                 rawSuffix = " " + rawSuffix;
             }

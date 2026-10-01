@@ -72,6 +72,28 @@ final class Settings {
         return cfg().getBoolean("tab.game.suffix-auto-space", true);
     }
 
+    /** Цвет ника обычного игрока (без префикса, группа default). */
+    String defaultNameColor() {
+        return cfg().getString("tab.game.default-name-color", "&#CDCDFF");
+    }
+
+    /** Оформление группы в табе: префикс, стиль ника, суффикс (null - оставить из LuckPerms). */
+    record GroupFormat(String prefix, String nameStyle, String suffix) {
+    }
+
+    /** Первая группа сверху вниз из tab.game.group-formats, которая есть у игрока; null - нет. */
+    GroupFormat groupFormat(java.util.function.Predicate<String> hasGroup) {
+        ConfigurationSection s = cfg().getConfigurationSection("tab.game.group-formats");
+        if (s == null) return null;
+        for (String group : s.getKeys(false)) {
+            if (hasGroup.test(group)) {
+                return new GroupFormat(s.getString(group + ".prefix"), s.getString(group + ".name-style"),
+                        s.getString(group + ".suffix"));
+            }
+        }
+        return null;
+    }
+
     String nameColor() {
         return cfg().getString("tab.game.name-color", "&7");
     }
