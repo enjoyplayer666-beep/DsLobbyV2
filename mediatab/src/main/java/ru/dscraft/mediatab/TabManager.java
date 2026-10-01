@@ -105,6 +105,14 @@ final class TabManager {
             if (settings.showPrefixes() && luckPerms != null) {
                 rawPrefix = luckPerms.prefix(player);
                 rawSuffix = luckPerms.suffix(player);
+                // команда проекта (даже если состоит в elitesp) - префикс и суффикс своей группы персонала
+                String staffGroup = staffGroup(player);
+                if (staffGroup != null && !luckPerms.hasOwnPrefix(player)) {
+                    String gp = luckPerms.groupPrefix(staffGroup);
+                    if (!gp.isEmpty()) rawPrefix = gp;
+                    String gs = luckPerms.groupSuffix(staffGroup);
+                    if (!gs.isEmpty()) rawSuffix = gs;
+                }
             }
             // хвост префикса из /prefix set - цвет ника
             NameStyle.Split split = NameStyle.split(rawPrefix);
@@ -156,9 +164,14 @@ final class TabManager {
     }
 
     private boolean isStaff(Player player) {
+        return staffGroup(player) != null;
+    }
+
+    /** Первая группа персонала из staff-groups, которая есть у игрока; null - не персонал. */
+    private String staffGroup(Player player) {
         for (String group : settings.staffGroups()) {
-            if (player.hasPermission("group." + group)) return true;
+            if (player.hasPermission("group." + group)) return group;
         }
-        return false;
+        return null;
     }
 }

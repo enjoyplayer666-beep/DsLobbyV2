@@ -27,6 +27,20 @@ final class LuckPermsHook {
         return s == null ? "" : s;
     }
 
+    /** Префикс самой группы (без наследования игрока), "" - нет. */
+    String groupPrefix(String name) {
+        Group group = api.getGroupManager().getGroup(name);
+        String p = group == null ? null : group.getCachedData().getMetaData().getPrefix();
+        return p == null ? "" : p;
+    }
+
+    /** Суффикс самой группы, "" - нет. */
+    String groupSuffix(String name) {
+        Group group = api.getGroupManager().getGroup(name);
+        String s = group == null ? null : group.getCachedData().getMetaData().getSuffix();
+        return s == null ? "" : s;
+    }
+
     /** Свой префикс игрока (/prefix set) - он главнее оформления группы. */
     boolean hasOwnPrefix(Player player) {
         User user = user(player);
