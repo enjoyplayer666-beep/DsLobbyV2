@@ -77,8 +77,10 @@ final class Settings {
         return cfg().getString("tab.game.staff-prefixes." + group, "");
     }
 
-    /** Суффикс всей команды проекта в табе ("" - из LuckPerms). */
-    String staffSuffix() {
+    /** Суффикс группы персонала в табе: staff-suffixes.<группа>, иначе общий staff-suffix ("" - из LuckPerms). */
+    String staffSuffix(String group) {
+        String own = cfg().getString("tab.game.staff-suffixes." + group, null);
+        if (own != null) return own;
         return cfg().getString("tab.game.staff-suffix", "&a&l✔");
     }
 

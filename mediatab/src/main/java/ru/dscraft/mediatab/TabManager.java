@@ -120,7 +120,7 @@ final class TabManager {
                         if (gp.isEmpty()) gp = luckPerms.groupPrefix(staffGroup);
                         if (!gp.isEmpty()) rawPrefix = gp;
                     }
-                    String gs = settings.staffSuffix();
+                    String gs = settings.staffSuffix(staffGroup);
                     if (gs.isEmpty()) gs = luckPerms.groupSuffix(staffGroup);
                     if (!gs.isEmpty()) rawSuffix = gs;
                 }
