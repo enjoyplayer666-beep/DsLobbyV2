@@ -105,7 +105,7 @@ public class LuckPermsHook {
         if (user == null) return false;
 
         int priority = configManager.customPrefixPriority();
-        // один личный префикс на все миры - старые (в т.ч. привязанные к миру) убираем
+        // старый личный префикс убираем, новый ставим
         removeAllOwnPrefixes(user);
 
         PrefixNode node = PrefixNode.builder(rawPrefix, priority).build();
@@ -148,12 +148,14 @@ public class LuckPermsHook {
     }
 
     /**
-     * Сброс: все личные префиксы игрока - с любым приоритетом и в любом мире/контексте
-     * (раньше снимался только с приоритетом customprefix, и в лобби мог остаться другой).
-     * Префикс привилегии не трогается - он на группе, а не на игроке.
+     * Сброс личного префикса (/prefix set): только ноды с приоритетом customprefix.priority (и старым).
+     * Остальные префиксы на игроке (например, выданные персоналу через /lp user ... setprefix) не трогаем.
      */
     private boolean removeAllOwnPrefixes(User user) {
-        Set<PrefixNode> toRemove = user.getNodes(NodeType.PREFIX).stream().collect(Collectors.toSet());
+        int priority = configManager.customPrefixPriority();
+        Set<PrefixNode> toRemove = user.getNodes(NodeType.PREFIX).stream()
+                .filter(n -> n.getPriority() == priority || n.getPriority() == ConfigManager.LEGACY_CUSTOM_PREFIX_PRIORITY)
+                .collect(Collectors.toSet());
         for (PrefixNode node : toRemove) {
             user.data().remove(node);
         }

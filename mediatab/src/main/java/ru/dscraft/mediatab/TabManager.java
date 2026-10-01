@@ -111,7 +111,8 @@ final class TabManager {
             String nickStyle = split.nickStyle();
             rawPrefix = split.prefix() == null ? "" : split.prefix();
             // оформление группы из tab.game.group-formats (Elite и т.п.), если нет своего /prefix set
-            Settings.GroupFormat format = luckPerms != null && luckPerms.hasOwnPrefix(player)
+            // команда проекта - всегда со своим префиксом, даже если её группа наследует elitesp
+            Settings.GroupFormat format = isStaff(player) || (luckPerms != null && luckPerms.hasOwnPrefix(player))
                     ? null : settings.groupFormat(g -> player.hasPermission("group." + g));
             if (format != null) {
                 if (format.prefix() != null) rawPrefix = format.prefix();
