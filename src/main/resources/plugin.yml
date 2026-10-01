@@ -21,7 +21,7 @@ commands:
     aliases: [lobby]
   prefix:
     description: Личный префикс и префикс для чата
-    usage: /prefix set <текст> | /prefix reset | /prefix chat <текст|reset>
+    usage: /prefix set <текст> | /prefix reset [ник] | /prefix chat <текст|reset>
 
 permissions:
   destroylobby.admin:
@@ -36,5 +36,8 @@ permissions:
     default: false
   destroylobby.chat.seeall:
     default: false
+  destroylobby.prefix.reset.others:
+    description: /prefix reset ник - сбросить префикс другому игроку (команда проекта)
+    default: op
   destroylobby.prefix.format:
     default: false

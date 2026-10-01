@@ -6,6 +6,7 @@ import net.luckperms.api.model.data.DataMutateResult;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
+import net.luckperms.api.node.types.MetaNode;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.query.QueryOptions;
 import org.bukkit.entity.Player;
@@ -13,6 +14,8 @@ import ru.dscraft.destroylobby.config.ConfigManager;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 /**
@@ -120,6 +123,27 @@ public class LuckPermsHook {
             api.getUserManager().saveUser(user);
         }
         return removed;
+    }
+
+    /** Мета чат-префикса из DestroyChat (/prefix chat). */
+    private static final String CHAT_PREFIX_META = "destroy-chat-prefix";
+
+    /**
+     * /prefix reset ник: снять игроку (и не в сети) личный префикс и чат-префикс.
+     * @return true - было что снимать
+     */
+    public CompletableFuture<Boolean> resetPrefixes(UUID uuid) {
+        if (api == null) return CompletableFuture.completedFuture(false);
+        return api.getUserManager().loadUser(uuid).thenApply(user -> {
+            boolean removed = removeCustomPrefixNodes(user, configManager.customPrefixPriority());
+            Set<MetaNode> metas = user.getNodes(NodeType.META).stream()
+                    .filter(n -> n.getMetaKey().equals(CHAT_PREFIX_META))
+                    .collect(Collectors.toSet());
+            for (MetaNode node : metas) user.data().remove(node);
+            removed |= !metas.isEmpty();
+            if (removed) api.getUserManager().saveUser(user);
+            return removed;
+        });
     }
 
     private boolean removeCustomPrefixNodes(User user, int priority) {

@@ -42,6 +42,11 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // /prefix reset ник - команда проекта сносит префикс игроку (можно и из консоли)
+        if (args.length >= 2 && (args[0].equalsIgnoreCase("reset") || args[0].equalsIgnoreCase("clear"))) {
+            handleResetOther(sender, args[1]);
+            return true;
+        }
         if (!(sender instanceof Player player)) {
             sender.sendMessage("§cЭту команду можно выполнить только находясь в игре.");
             return true;
@@ -100,6 +105,37 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
         } else {
             player.sendMessage(ColorUtil.parse("<gray>У тебя и так не было личного префикса.</gray>"));
         }
+    }
+
+    private void handleResetOther(CommandSender sender, String name) {
+        if (!sender.hasPermission(Perms.PREFIX_RESET_OTHERS)) {
+            sender.sendMessage(Component.text("Сбрасывать префикс другим может только команда проекта.", NamedTextColor.RED));
+            return;
+        }
+        if (!luckPermsHook.isEnabled()) {
+            sender.sendMessage(Component.text("LuckPerms недоступен.", NamedTextColor.RED));
+            return;
+        }
+        Player online = Bukkit.getPlayerExact(name);
+        org.bukkit.OfflinePlayer target = online != null ? online : Bukkit.getOfflinePlayerIfCached(name);
+        if (target == null) {
+            sender.sendMessage(Component.text("Игрок " + name + " ещё не заходил на сервер.", NamedTextColor.RED));
+            return;
+        }
+        String shown = target.getName() != null ? target.getName() : name;
+        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("DestroyLobby");
+        luckPermsHook.resetPrefixes(target.getUniqueId()).thenAccept(removed -> {
+            if (plugin == null || !plugin.isEnabled()) return;
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (removed) {
+                    sender.sendMessage(ColorUtil.parse("<green>Префикс игрока <white>" + shown + "</white> сброшен.</green>"));
+                    Player now = Bukkit.getPlayer(target.getUniqueId());
+                    if (now != null) now.sendMessage(ColorUtil.parse("<gray>Твой личный префикс сбросила команда проекта.</gray>"));
+                } else {
+                    sender.sendMessage(ColorUtil.parse("<gray>У игрока <white>" + shown + "</white> нет личного префикса.</gray>"));
+                }
+            });
+        });
     }
 
     // ---- /prefix chat -> DestroyChat ----
@@ -168,6 +204,10 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("chat")) {
             if ("reset".startsWith(args[1].toLowerCase(Locale.ROOT))) out.add("reset");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("reset") && sender.hasPermission(Perms.PREFIX_RESET_OTHERS)) {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                if (p.getName().toLowerCase(Locale.ROOT).startsWith(args[1].toLowerCase(Locale.ROOT))) out.add(p.getName());
+            }
         }
         return out;
     }
