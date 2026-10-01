@@ -7,7 +7,7 @@
 # =====================================================================
 
 # не трогать: по нему плагин обновляет старый config.yml
-config-version: 2
+config-version: 3
 
 worlds:
   # имя мира лобби на сервере (как в /mv list)
@@ -70,11 +70,13 @@ tab:
       elitesp:
         prefix: "&f⌜&#8D73FC&oElite&f⌟ "
         name-style: "&7&o"
-        suffix: "&6✔"
+        suffix: "&6&l✔"
     # группы команды проекта (белый ник)
     staff-groups: [curator, admin, manager, moderator, media, mediajr, helper]
     # префиксы персонала в табе - значки из ресурс-пака SP-DS (&f - родные цвета картинки).
     # Главнее префикса LuckPerms, поэтому персонал в группе elitesp всё равно со своим значком.
+    # суффикс всей команды проекта (после ника), "" - из LuckPerms
+    staff-suffix: "&a&l✔"
     staff-prefixes:
       curator: "&f "
       admin: "&f🤪 "

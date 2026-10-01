@@ -174,6 +174,16 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
      */
     private void migrate() {
         var cfg = getConfig();
+        // config-version 3: суффиксы - команда проекта &a&l✔, Elite SP &6&l✔
+        if (cfg.getInt("config-version", 1) == 2) {
+            cfg.set("tab.game.staff-suffix", "&a&l✔");
+            if (cfg.isConfigurationSection("tab.game.group-formats.elitesp")) {
+                cfg.set("tab.game.group-formats.elitesp.suffix", "&6&l✔");
+            }
+            cfg.set("config-version", 3);
+            saveConfig();
+            return;
+        }
         if (cfg.getInt("config-version", 1) >= 2) return;
         cfg.set("tab.lobby.shared-prefix", cfg.getString("tab.lobby.shared-prefix", "").replace("\uE030", "☺"));
         for (String path : new String[]{"tab.lobby.header", "tab.game.header"}) {
@@ -182,7 +192,7 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
             cfg.set(path, lines);
         }
         cfg.set("scoreboard.game.title", cfg.getString("scoreboard.game.title", "").replace("{world}", "SkyPvP"));
-        cfg.set("config-version", 2);
+        cfg.set("config-version", 3);
         saveConfig();
     }
 }

@@ -77,6 +77,11 @@ final class Settings {
         return cfg().getString("tab.game.staff-prefixes." + group, "");
     }
 
+    /** Суффикс всей команды проекта в табе ("" - из LuckPerms). */
+    String staffSuffix() {
+        return cfg().getString("tab.game.staff-suffix", "&a&l✔");
+    }
+
     /** Цвет ника обычного игрока (без префикса, группа default). */
     String defaultNameColor() {
         return cfg().getString("tab.game.default-name-color", "&#CDCDFF");
