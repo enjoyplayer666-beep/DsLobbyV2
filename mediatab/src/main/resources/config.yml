@@ -113,3 +113,35 @@ scoreboard:
       - "<white>☠</white> <#A7B4FC>Смерти:</#A7B4FC> <white>{deaths}</white>"
       - ""
       - "  <gradient:#6D84FC:#FFFFFF>ds-craft.ru</gradient>"
+
+# ---------------------------------------------------------------------
+#  /glow - свечение вокруг игрока (в лобби нет). Цвет свечения = цвет ника над головой.
+# ---------------------------------------------------------------------
+glow:
+  title: "<gray>| Свечение |</gray>"
+  message: "<white>Свечение успешно активировано! [</white><color><white>]</white>"
+  off-message: "<white>Свечение выключено.</white>"
+  # кому какие цвета: первая подходящая группа сверху вниз; all - все.
+  # Команда проекта (staff-groups) и опы - все. Остальным /glow нет.
+  # цвета: yellow blue gold gray green red pink aqua black dark_blue dark_aqua dark_red dark_gray dark_green white purple
+  access:
+    elitesp: all
+    legend: [yellow, blue, gold, gray, green]
+  # головы цветов: ссылка textures.minecraft.net/texture/... или только хеш; пусто - блок того же цвета
+  heads:
+    yellow: ""
+    blue: ""
+    gold: ""
+    gray: ""
+    green: ""
+    red: ""
+    pink: ""
+    aqua: ""
+    black: ""
+    dark_blue: ""
+    dark_aqua: ""
+    dark_red: ""
+    dark_gray: ""
+    dark_green: ""
+    white: ""
+    purple: ""

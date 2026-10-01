@@ -10,6 +10,9 @@ commands:
     description: Перезагрузка конфига MediaTab
     usage: /mediatab reload
     permission: mediatab.admin
+  glow:
+    description: Меню свечения
+    usage: /glow
 permissions:
   mediatab.admin:
     default: op

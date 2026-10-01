@@ -34,6 +34,12 @@ final class TabManager {
     /** Последний выставленный playerListName - чтобы не слать одинаковые пакеты каждую секунду. */
     private final Map<UUID, Component> lastListName = new ConcurrentHashMap<>();
 
+    private GlowMenu glow;
+
+    void glow(GlowMenu glow) {
+        this.glow = glow;
+    }
+
     TabManager(Settings settings, LuckPermsHook luckPerms, PlayerBoardService boards) {
         this.settings = settings;
         this.luckPerms = luckPerms;
@@ -162,7 +168,11 @@ final class TabManager {
         int sortKey = Math.max(0, 99999 - weight); // больший weight -> выше в списке
         String teamName = TEAM_PREFIX + String.format("%05d", sortKey) + "_"
                 + player.getUniqueId().toString().replace("-", "").substring(0, 8);
-        boards.applyEntryToAll(player, teamName, prefix, suffix, ColorUtil.toNamed(nameColor), force);
+        // свечение (/glow) - цвет команды; в лобби свечения нет
+        GlowMenu.Glow g = glow == null || lobby ? null : glow.current(player);
+        if (player.isGlowing() != (g != null)) player.setGlowing(g != null);
+        NamedTextColor teamColor = g != null ? g.color() : ColorUtil.toNamed(nameColor);
+        boards.applyEntryToAll(player, teamName, prefix, suffix, teamColor, force);
     }
 
     private boolean isStaff(Player player) {

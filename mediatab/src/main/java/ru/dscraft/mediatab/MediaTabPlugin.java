@@ -52,6 +52,11 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
             getLogger().warning("LuckPerms не найден: в табе не будет префиксов и сортировки по группам.");
         }
         tab = new TabManager(settings, luckPerms, boards);
+        // /glow - меню свечения
+        glowMenu = new GlowMenu(this, settings);
+        tab.glow(glowMenu);
+        if (getCommand("glow") != null) getCommand("glow").setExecutor(glowMenu);
+        getServer().getPluginManager().registerEvents(glowMenu, this);
         scoreboard = new ScoreboardManager(settings, boards);
 
         getServer().getPluginManager().registerEvents(this, this);
@@ -60,6 +65,13 @@ public class MediaTabPlugin extends JavaPlugin implements Listener {
             tab.handleJoin(online);
             scoreboard.handleJoin(online);
         }
+    }
+
+    private GlowMenu glowMenu;
+
+    /** Сразу обновить строку игрока (цвет свечения и т.п.). */
+    void refresh(Player player) {
+        if (tab != null) tab.updatePlayer(player, true);
     }
 
     @Override
