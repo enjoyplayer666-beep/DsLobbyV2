@@ -113,10 +113,13 @@ final class TabManager {
                 rawSuffix = luckPerms.suffix(player);
                 // команда проекта (даже если состоит в elitesp) - префикс и суффикс своей группы персонала
                 String staffGroup = staffGroup(player);
-                if (staffGroup != null && !luckPerms.hasOwnPrefix(player)) {
-                    String gp = settings.staffPrefix(staffGroup);
-                    if (gp.isEmpty()) gp = luckPerms.groupPrefix(staffGroup);
-                    if (!gp.isEmpty()) rawPrefix = gp;
+                if (staffGroup != null) {
+                    // свой префикс (/prefix set) остаётся, а суффикс персонала (✔) - всегда
+                    if (!luckPerms.hasOwnPrefix(player)) {
+                        String gp = settings.staffPrefix(staffGroup);
+                        if (gp.isEmpty()) gp = luckPerms.groupPrefix(staffGroup);
+                        if (!gp.isEmpty()) rawPrefix = gp;
+                    }
                     String gs = settings.staffSuffix();
                     if (gs.isEmpty()) gs = luckPerms.groupSuffix(staffGroup);
                     if (!gs.isEmpty()) rawSuffix = gs;
