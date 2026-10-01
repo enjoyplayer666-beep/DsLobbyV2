@@ -146,6 +146,8 @@ public class LobbyProtectionListener implements Listener {
         String label = message.split(" ")[0].toLowerCase(Locale.ROOT);
         // телепорты DestroyLobby работают и в лобби
         if (label.equals("hub") || label.equals("lobby") || label.equals("spawn")) return;
+        // префикс (в т.ч. /prefix reset ник) - всегда, даже если в старом конфиге его нет в allowed-commands
+        if (label.equals("prefix")) return;
 
         List<String> allowed = configManager.lobbyAllowedCommands();
         for (String allowedCommand : allowed) {
