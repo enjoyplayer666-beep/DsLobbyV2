@@ -160,7 +160,6 @@ lobby-protection:
   block-damage: true
   block-hunger: true
   allowed-commands:
-    - "prefix"
     - "color"
     - "links"
     - "menu"
