@@ -126,6 +126,32 @@ public class LobbyProtectionListener implements Listener {
         event.setCancelled(true);
     }
 
+    /**
+     * В лобби умереть нельзя никому (и опам): любой урон по игроку отменяется,
+     * упал в пустоту - сразу на спавн лобби.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLobbyDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player) || !inLobby(player)) return;
+        event.setCancelled(true);
+        if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+            org.bukkit.Location spawn = configManager.getLobbySpawnLocation();
+            if (spawn != null) {
+                player.setFallDistance(0);
+                player.teleport(spawn);
+            }
+        }
+    }
+
+    /** Из лобби нельзя нанести урон никому - ни игрокам, ни мобам (и опам тоже). */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLobbyAttack(org.bukkit.event.entity.EntityDamageByEntityEvent event) {
+        Player attacker = null;
+        if (event.getDamager() instanceof Player p) attacker = p;
+        else if (event.getDamager() instanceof org.bukkit.entity.Projectile pr && pr.getShooter() instanceof Player p) attacker = p;
+        if (attacker != null && inLobby(attacker)) event.setCancelled(true);
+    }
+
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onFoodChange(FoodLevelChangeEvent event) {
         if (!configManager.lobbyProtectionEnabled() || !configManager.lobbyBlockHunger()) return;
