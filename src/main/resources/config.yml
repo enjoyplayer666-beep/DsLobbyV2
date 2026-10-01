@@ -171,8 +171,12 @@ lobby-protection:
     - "reg"
   blocked-action-message: "<yellow>❗</yellow> <gray>В лобби это действие недоступно</gray>"
   # что видно по "/" в лобби (всем, кроме опов)
+  # (login, l, reg, register, changepassword видны всегда)
   tab-commands:
     - "login"
+    - "l"
+    - "reg"
+    - "register"
     - "changepassword"
   blocked-command-message: "<yellow>❗</yellow> <gray>Эта команда недоступна в лобби</gray>"
 

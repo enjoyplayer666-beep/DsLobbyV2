@@ -262,8 +262,10 @@ public class ConfigManager {
 
     /** Что видно по "/" в лобби всем, кроме опов. */
     public List<String> lobbyTabCommands() {
-        List<String> list = cfg.getStringList("lobby-protection.tab-commands");
-        return list.isEmpty() ? List.of("login", "changepassword") : list;
+        // вход и регистрация видны всегда, плюс что дописано в конфиге
+        java.util.Set<String> out = new java.util.LinkedHashSet<>(List.of("login", "l", "reg", "register", "changepassword"));
+        out.addAll(cfg.getStringList("lobby-protection.tab-commands"));
+        return new java.util.ArrayList<>(out);
     }
 
     public String lobbyBlockedActionMessage() {
