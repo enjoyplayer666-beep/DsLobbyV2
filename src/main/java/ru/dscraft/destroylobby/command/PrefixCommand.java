@@ -123,7 +123,7 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
             return;
         }
         String shown = target.getName() != null ? target.getName() : name;
-        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("DestroyLobby");
+        org.bukkit.plugin.Plugin plugin = Bukkit.getPluginManager().getPlugin("MediaDestroyLobby");
         luckPermsHook.resetPrefixes(target.getUniqueId()).thenAccept(removed -> {
             if (plugin == null || !plugin.isEnabled()) return;
             Bukkit.getScheduler().runTask(plugin, () -> {
@@ -145,7 +145,7 @@ public class PrefixCommand implements CommandExecutor, TabCompleter {
      * привилегий (/prefix chat ...), перенаправляем её в /chatprefix. Права проверяет DestroyChat.
      */
     private void handleChat(Player player, String[] args) {
-        if (!Bukkit.getPluginManager().isPluginEnabled("DestroyChat")) {
+        if (!Bukkit.getPluginManager().isPluginEnabled("MediaDestroyChat")) {
             deny(player, "Чат-плагин DestroyChat не установлен на сервере.");
             return;
         }

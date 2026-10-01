@@ -51,6 +51,12 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
     private VisibilityManager visibilityManager;
 
     @Override
+    public void onLoad() {
+        // раньше плагин назывался DestroyLobby
+        ru.dscraft.destroylobby.module.Modules.adoptOldFolder(this, "DestroyLobby");
+    }
+
+    @Override
     public void onEnable() {
         instance = this;
 
@@ -74,7 +80,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
 
         logIntegration("Multiverse-Core");
         logIntegration("AdvancedPortals");
-        logIntegration("DestroyChat");
+        logIntegration("MediaDestroyChat");
 
         this.statsManager = new StatsManager(this);
         LobbyApi.init(statsManager); // таб и скорборд - в плагине MediaTab, он берёт отсюда коины/убийства/смерти

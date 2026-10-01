@@ -57,7 +57,7 @@ final class Hooks {
 
     /** После перезагрузки DestroyLobby (новый загрузчик классов) ищет методы заново. */
     private static synchronized boolean resolveLobby() {
-        Plugin lobby = Bukkit.getPluginManager().getPlugin("DestroyLobby");
+        Plugin lobby = Bukkit.getPluginManager().getPlugin("MediaDestroyLobby");
         if (lobby == null || !lobby.isEnabled()) return false;
         ClassLoader cl = lobby.getClass().getClassLoader();
         if (cl == lobbyLoader && coins != null) return true;
@@ -80,7 +80,7 @@ final class Hooks {
 
     /** Выбранный титул игрока из MediaItems (ru.dscraft.mediaitems.TitlesApi) или пусто. */
     static synchronized net.kyori.adventure.text.Component title(Player p) {
-        Plugin items = Bukkit.getPluginManager().getPlugin("DestroySkyPvP");
+        Plugin items = Bukkit.getPluginManager().getPlugin("MediaDestroySkyPvP");
         if (items == null || !items.isEnabled()) return net.kyori.adventure.text.Component.empty();
         ClassLoader cl = items.getClass().getClassLoader();
         try {
