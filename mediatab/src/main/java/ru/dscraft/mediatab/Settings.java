@@ -72,6 +72,11 @@ final class Settings {
         return cfg().getBoolean("tab.game.suffix-auto-space", true);
     }
 
+    /** Префикс группы персонала в табе (значок из ресурс-пака), "" - взять из LuckPerms. */
+    String staffPrefix(String group) {
+        return cfg().getString("tab.game.staff-prefixes." + group, "");
+    }
+
     /** Цвет ника обычного игрока (без префикса, группа default). */
     String defaultNameColor() {
         return cfg().getString("tab.game.default-name-color", "&#CDCDFF");
