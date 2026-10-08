@@ -169,39 +169,75 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
             }
 
             if (args.length >= 2 && args[0].equalsIgnoreCase("portal")) {
+                var cfg = getConfig();
+                String first = args[1].toLowerCase(java.util.Locale.ROOT);
+                if (first.equals("list")) {
+                    var all = cfg.getConfigurationSection("portals");
+                    sender.sendMessage("§7Порталы: §fлобби §7(" + (cfg.getBoolean("lobby-portal.enabled") ? "§aвкл" : "§cвыкл") + "§7)");
+                    if (all != null) {
+                        for (String n : all.getKeys(false)) {
+                            sender.sendMessage("§7- §f" + n + " §7" + all.getString(n + ".world", "?") + " -> "
+                                    + all.getString(n + ".target.world", "?") + " ("
+                                    + (all.getBoolean(n + ".enabled") ? "§aвкл" : "§cвыкл") + "§7)");
+                        }
+                    }
+                    return true;
+                }
+                // /destroylobby portal pos1 - портал лобби; /destroylobby portal <имя> pos1 - именованный
+                java.util.Set<String> actions = java.util.Set.of("pos1", "pos2", "target", "on", "off", "remove");
+                String base;
+                String action;
+                String label;
+                if (actions.contains(first)) {
+                    base = "lobby-portal";
+                    action = first;
+                    label = "лобби";
+                } else {
+                    if (args.length < 3 || !actions.contains(args[2].toLowerCase(java.util.Locale.ROOT))) {
+                        sender.sendMessage("§7/destroylobby portal [имя] pos1|pos2|target|on|off|remove, /destroylobby portal list");
+                        return true;
+                    }
+                    base = "portals." + first;
+                    action = args[2].toLowerCase(java.util.Locale.ROOT);
+                    label = first;
+                }
+                if (action.equals("remove")) {
+                    cfg.set(base, null);
+                    if (base.equals("lobby-portal")) cfg.set("lobby-portal.enabled", false);
+                    saveConfig();
+                    sender.sendMessage("§a[DestroyLobby] Портал " + label + " удалён.");
+                    return true;
+                }
+                if (action.equals("on") || action.equals("off")) {
+                    cfg.set(base + ".enabled", action.equals("on"));
+                    saveConfig();
+                    sender.sendMessage("§a[DestroyLobby] Портал " + label + " " + (action.equals("on") ? "включён" : "выключен") + ".");
+                    return true;
+                }
                 Player player = requirePlayer(sender);
                 if (player == null) return true;
                 org.bukkit.Location l = player.getLocation();
-                var cfg = getConfig();
-                switch (args[1].toLowerCase(java.util.Locale.ROOT)) {
-                    case "pos1", "pos2" -> {
-                        String k = "lobby-portal." + args[1].toLowerCase(java.util.Locale.ROOT);
-                        cfg.set("lobby-portal.world", l.getWorld().getName());
-                        cfg.set(k + ".x", l.getBlockX());
-                        cfg.set(k + ".y", l.getBlockY());
-                        cfg.set(k + ".z", l.getBlockZ());
-                        sender.sendMessage("§a[DestroyLobby] Угол портала " + args[1] + " поставлен: " + l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ());
-                    }
-                    case "target" -> {
-                        cfg.set("lobby-portal.target.world", l.getWorld().getName());
-                        cfg.set("lobby-portal.target.x", l.getBlockX() + 0.5);
-                        cfg.set("lobby-portal.target.y", l.getY());
-                        cfg.set("lobby-portal.target.z", l.getBlockZ() + 0.5);
-                        cfg.set("lobby-portal.target.yaw", Math.round(l.getYaw() / 90f) * 90f);
-                        cfg.set("lobby-portal.target.pitch", 0f);
-                        sender.sendMessage("§a[DestroyLobby] Точка, куда ведёт портал, поставлена здесь.");
-                    }
-                    case "on", "off" -> {
-                        cfg.set("lobby-portal.enabled", args[1].equalsIgnoreCase("on"));
-                        sender.sendMessage("§a[DestroyLobby] Портал " + (args[1].equalsIgnoreCase("on") ? "включён" : "выключен") + ".");
-                    }
-                    default -> sender.sendMessage("§7/destroylobby portal pos1|pos2|target|on|off");
+                if (action.equals("target")) {
+                    cfg.set(base + ".target.world", l.getWorld().getName());
+                    cfg.set(base + ".target.x", l.getBlockX() + 0.5);
+                    cfg.set(base + ".target.y", l.getY());
+                    cfg.set(base + ".target.z", l.getBlockZ() + 0.5);
+                    cfg.set(base + ".target.yaw", Math.round(l.getYaw() / 90f) * 90f);
+                    cfg.set(base + ".target.pitch", 0f);
+                    sender.sendMessage("§a[DestroyLobby] Портал " + label + ": точка, куда он ведёт, поставлена здесь.");
+                } else {
+                    cfg.set(base + ".world", l.getWorld().getName());
+                    cfg.set(base + "." + action + ".x", l.getBlockX());
+                    cfg.set(base + "." + action + ".y", l.getBlockY());
+                    cfg.set(base + "." + action + ".z", l.getBlockZ());
+                    sender.sendMessage("§a[DestroyLobby] Портал " + label + ": угол " + action + " поставлен: "
+                            + l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ());
                 }
                 saveConfig();
                 return true;
             }
 
-            sender.sendMessage("§7Использование: /destroylobby reload|setspawn|portal <pos1|pos2|target|on|off>");
+            sender.sendMessage("§7Использование: /destroylobby reload|setspawn|portal [имя] <pos1|pos2|target|on|off|remove>|portal list");
             return true;
         }
 
