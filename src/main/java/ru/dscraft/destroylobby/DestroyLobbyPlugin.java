@@ -134,7 +134,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
 
         // модули в этом же jar: таб/скорборд и MOTD (папки plugins/DestroyLobby/MediaTab, /DestroyCraftMOTD)
         modules = new ru.dscraft.destroylobby.module.Modules(this);
-        modules.enable(ru.dscraft.mediatab.MediaTabPlugin::new, "MediaTab", "mediatab", "glow");
+        modules.enable(ru.dscraft.mediatab.MediaTabPlugin::new, "MediaTab", "mediatab", "glow", "tabemoji");
         modules.enable(com.destroycraft.motd.DestroyCraftMotdPlugin::new, "DestroyCraftMOTD", "destroymotd");
     }
 

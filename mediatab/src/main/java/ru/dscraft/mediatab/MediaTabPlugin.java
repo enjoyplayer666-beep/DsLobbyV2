@@ -56,6 +56,8 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
         glowMenu = new GlowMenu(this, settings);
         tab.glow(glowMenu);
         if (getCommand("glow") != null) getCommand("glow").setExecutor(glowMenu);
+        // /tabemoji <ник> <эмодзи|off> - эмодзи у ника, ставит команда проекта
+        this.luckPermsHook = luckPerms;
         getServer().getPluginManager().registerEvents(glowMenu, this);
         scoreboard = new ScoreboardManager(settings, boards);
 
@@ -68,6 +70,7 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
     }
 
     private GlowMenu glowMenu;
+    private LuckPermsHook luckPermsHook;
 
     /** Сразу обновить строку игрока (цвет свечения и т.п.). */
     void refresh(Player player) {
@@ -167,6 +170,7 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("tabemoji")) return tabEmoji(sender, args);
         if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
             reloadConfig();
             stopTasks();
@@ -180,12 +184,67 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
         return true;
     }
 
+    /** Команда проекта (группы tab.game.staff-groups), опы и право mediatab.emoji. */
+    private boolean canSetEmoji(CommandSender sender) {
+        if (!(sender instanceof Player p) || p.isOp() || p.hasPermission("mediatab.emoji")) return true;
+        for (String g : settings.staffGroups()) if (p.hasPermission("group." + g)) return true;
+        return false;
+    }
+
+    private boolean tabEmoji(CommandSender sender, String[] args) {
+        if (!canSetEmoji(sender)) {
+            sender.sendMessage(ColorUtil.parse("<#C9C9FB>Нет такой команды :/</#C9C9FB>"));
+            return true;
+        }
+        if (args.length < 2) {
+            sender.sendMessage(ColorUtil.parse("<#C7C4B7>/tabemoji <ник> <эмодзи> <dark_gray>-</dark_gray> поставить, /tabemoji <ник> off <dark_gray>-</dark_gray> убрать</#C7C4B7>"));
+            return true;
+        }
+        if (luckPermsHook == null) {
+            sender.sendMessage(ColorUtil.parse("<red>LuckPerms не найден."));
+            return true;
+        }
+        org.bukkit.OfflinePlayer target = Bukkit.getPlayerExact(args[0]);
+        if (target == null) target = Bukkit.getOfflinePlayerIfCached(args[0]);
+        if (target == null) {
+            sender.sendMessage(ColorUtil.parse("<#E53232>◆</#E53232> <#C7C4B7>Игрок <white>" + args[0] + "</white> не найден.</#C7C4B7>"));
+            return true;
+        }
+        String value = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length)).trim();
+        boolean off = value.equalsIgnoreCase("off") || value.equalsIgnoreCase("reset") || value.equals("-");
+        if (!off && value.length() > 16) {
+            sender.sendMessage(ColorUtil.parse("<#E53232>◆</#E53232> <#C7C4B7>Слишком длинно - максимум 16 символов.</#C7C4B7>"));
+            return true;
+        }
+        String name = target.getName() == null ? args[0] : target.getName();
+        java.util.UUID uuid = target.getUniqueId();
+        luckPermsHook.setEmoji(uuid, off ? null : value).thenRun(() -> Bukkit.getScheduler().runTask(this, () -> {
+            Player online = Bukkit.getPlayer(uuid);
+            if (online != null) tab.updatePlayer(online, true);
+            sender.sendMessage(ColorUtil.parse(off
+                    ? "<#55FF55>Эмодзи у <white>" + name + "</white> убрано.</#55FF55>"
+                    : "<#55FF55>Эмодзи у <white>" + name + "</white>:</#55FF55> ").append(off ? net.kyori.adventure.text.Component.empty() : ColorUtil.rich("&f" + value)));
+        }));
+        return true;
+    }
+
     /**
      * config-version 2: смайлик лобби - символ ☺ из шрифта игры (прежний символ не из пака показывался квадратом);
      * вверху таба и скорборда всегда "SkyPvP", а не имя мира.
      */
     private void migrate() {
         var cfg = getConfig();
+        // config-version 4: вверху таба - "На сервере N игроков"
+        if (cfg.getInt("config-version", 1) == 3) {
+            for (String path : new String[]{"tab.lobby.header", "tab.game.header"}) {
+                List<String> lines = new ArrayList<>(cfg.getStringList(path));
+                if (lines.stream().noneMatch(l -> l.contains("{online}"))) lines.add(0, ONLINE_LINE);
+                cfg.set(path, lines);
+            }
+            cfg.set("config-version", 4);
+            saveConfig();
+            return;
+        }
         // config-version 3: суффиксы - команда проекта &a&l✔, Elite SP &6&l✔
         if (cfg.getInt("config-version", 1) == 2) {
             cfg.set("tab.game.staff-suffix", "&a&l✔");
@@ -194,6 +253,7 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
             }
             cfg.set("config-version", 3);
             saveConfig();
+            migrate();
             return;
         }
         if (cfg.getInt("config-version", 1) >= 2) return;
@@ -206,5 +266,8 @@ public class MediaTabPlugin extends ru.dscraft.destroylobby.module.Module implem
         cfg.set("scoreboard.game.title", cfg.getString("scoreboard.game.title", "").replace("{world}", "SkyPvP"));
         cfg.set("config-version", 3);
         saveConfig();
+        migrate();
     }
+
+    static final String ONLINE_LINE = "<#E6E6F0>На сервере</#E6E6F0> <#FFB347><bold>{online} {players_word}</bold></#FFB347>";
 }

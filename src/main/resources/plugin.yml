@@ -40,6 +40,9 @@ commands:
   glow:
     description: Меню свечения
     usage: /glow
+  tabemoji:
+    description: Эмодзи у ника в табе и чате (команда проекта)
+    usage: /tabemoji <ник> <эмодзи|off>
   destroymotd:
     description: Перезагрузить конфигурацию MOTD
     usage: /destroymotd reload

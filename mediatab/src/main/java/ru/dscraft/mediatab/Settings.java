@@ -37,6 +37,11 @@ final class Settings {
         return Math.max(1, cfg().getLong("tab.update-interval-ticks", 20));
     }
 
+    /** Цвет перед эмодзи у ника (&f - родные цвета значков из ресурс-пака). */
+    String emojiColor() {
+        return cfg().getString("tab.emoji-color", "&f");
+    }
+
     List<String> header(boolean lobby) {
         return lines(lobby ? "tab.lobby.header" : "tab.game.header");
     }

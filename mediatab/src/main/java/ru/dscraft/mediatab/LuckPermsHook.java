@@ -57,4 +57,21 @@ final class LuckPermsHook {
         }
         return max;
     }
+
+    /** Ключ метки LuckPerms с эмодзи у ника (ставит команда проекта, видно в табе и чате). */
+    static final String EMOJI_META = "tab-emoji";
+
+    String emoji(Player player) {
+        User user = user(player);
+        String e = user == null ? null : user.getCachedData().getMetaData().getMetaValue(EMOJI_META);
+        return e == null ? "" : e;
+    }
+
+    /** Поставить/убрать (value == null) эмодзи игроку, в том числе не в сети. */
+    java.util.concurrent.CompletableFuture<Void> setEmoji(java.util.UUID uuid, String value) {
+        return api.getUserManager().modifyUser(uuid, user -> {
+            user.data().clear(net.luckperms.api.node.NodeType.META.predicate(n -> n.getMetaKey().equals(EMOJI_META)));
+            if (value != null) user.data().add(net.luckperms.api.node.types.MetaNode.builder(EMOJI_META, value).build());
+        });
+    }
 }

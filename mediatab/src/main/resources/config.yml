@@ -7,7 +7,7 @@
 # =====================================================================
 
 # не трогать: по нему плагин обновляет старый config.yml
-config-version: 3
+config-version: 4
 
 worlds:
   # имя мира лобби на сервере (как в /mv list)
@@ -23,10 +23,13 @@ worlds:
 # ---------------------------------------------------------------------
 tab:
   update-interval-ticks: 20
+  # эмодзи у ника (/tabemoji <ник> <эмодзи|off> - команда проекта): цвет перед ним, &f - родные цвета значков пака
+  emoji-color: "&f"
 
   lobby:
-    # каждая строка списка = строка в табе, "" = пустая строка
+    # каждая строка списка = строка в табе, "" = пустая строка; {players_word} - "игрок/игрока/игроков"
     header:
+      - "<#E6E6F0>На сервере</#E6E6F0> <#FFB347><bold>{online} {players_word}</bold></#FFB347>"
       - "<gradient:#FB786F:#FDCB6B>DestroyCraft</gradient>"
       - "<#FDBD6C>SkyPvP</#FDBD6C>"
       - ""
@@ -43,6 +46,7 @@ tab:
 
   game:
     header:
+      - "<#E6E6F0>На сервере</#E6E6F0> <#FFB347><bold>{online} {players_word}</bold></#FFB347>"
       - "<bold><gradient:#6D84FC:#FFFFFF>DestroyCraft</gradient></bold>"
       - "<white>SkyPvP</white>"
       - ""

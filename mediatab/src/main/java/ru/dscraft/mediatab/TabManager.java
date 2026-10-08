@@ -82,10 +82,19 @@ final class TabManager {
         placeholders.put("player", player.getName());
         placeholders.put("online", String.valueOf(Bukkit.getOnlinePlayers().size()));
         placeholders.put("max", String.valueOf(Bukkit.getMaxPlayers()));
+        placeholders.put("players_word", playersWord(Bukkit.getOnlinePlayers().size()));
 
         player.sendPlayerListHeaderAndFooter(
                 lines(player, settings.header(lobby), placeholders),
                 lines(player, settings.footer(lobby), placeholders));
+    }
+
+    /** 1 игрок, 2 игрока, 5 игроков. */
+    static String playersWord(int n) {
+        int m10 = n % 10, m100 = n % 100;
+        if (m10 == 1 && m100 != 11) return "игрок";
+        if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return "игрока";
+        return "игроков";
     }
 
     private static Component lines(Player player, List<String> lines, Map<String, String> placeholders) {
@@ -159,8 +168,15 @@ final class TabManager {
             name = Component.empty().append(ColorUtil.rich(nickStyle + player.getName()));
         }
 
+        // эмодзи у ника от команды проекта (/tabemoji) - в конце строки
+        Component emoji = Component.empty();
+        if (luckPerms != null) {
+            String e = luckPerms.emoji(player);
+            if (!e.isBlank()) emoji = Component.text(" ").append(ColorUtil.rich(settings.emojiColor() + e));
+        }
+
         // 1) строка в табе - полноценный компонент, поддерживает любой hex и градиент
-        Component listName = Component.empty().append(prefix).append(name).append(suffix);
+        Component listName = Component.empty().append(prefix).append(name).append(suffix).append(emoji);
         if (force || !Objects.equals(lastListName.get(player.getUniqueId()), listName)) {
             player.playerListName(listName);
             lastListName.put(player.getUniqueId(), listName);
