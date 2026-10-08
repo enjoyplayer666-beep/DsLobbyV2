@@ -69,4 +69,4 @@ permissions:
     default: op
   destroycraft.motd.reload:
     default: op
-description: Лобби DestroyCraft + модули MediaTab (таб, скорборд, /glow) и DestroyCraftMOTD (MOTD)
+description: Лобби Amaterasu + модули MediaTab (таб, скорборд, /glow) и DestroyCraftMOTD (MOTD)

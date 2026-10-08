@@ -41,7 +41,7 @@ public class PlaceholderHook extends PlaceholderExpansion {
 
     @Override
     public String getAuthor() {
-        return "DestroyCraft";
+        return "Amaterasu";
     }
 
     @Override

@@ -7,7 +7,7 @@
 # Строки MOTD (максимум 2 строки в ванильном списке серверов).
 # Цвета ниже подобраны пипеткой по вашему скриншоту 1-в-1.
 motd:
-  line1: "<gradient:#FB786F:#FFCC66><b><i>DestroyCraft</i></b></gradient> <gray>•</gray> <gray><i>Версия:</i></gray> <i><color:#55FFFF>1.21.10</color></i>"
+  line1: "<gradient:#FB786F:#FFCC66><b><i>Amaterasu</i></b></gradient> <gray>•</gray> <gray><i>Версия:</i></gray> <i><color:#55FFFF>1.21.10</color></i>"
   line2: "<i><color:#BE67F2>Кланы</color></i> <white>•</white> <i><color:#FFF967>Новая броня</color></i> <white>•</white> <i><color:#FF3459>PvP ранги</color></i> <white>•</white> <i><color:#7EFFB9>Статистика</color></i>"
 
 # Иконка сервера (favicon 64x64 PNG).

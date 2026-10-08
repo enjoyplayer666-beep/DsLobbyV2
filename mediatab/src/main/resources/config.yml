@@ -1,5 +1,5 @@
 # =====================================================================
-#  MediaTab - таб и скорборд DestroyCraft
+#  MediaTab - таб и скорборд Amaterasu
 #  Тексты - MiniMessage: <gradient:#A:#B>..</gradient>, <#RRGGBB>, <bold>, <white> ...
 #  Префиксы из LuckPerms - &-коды и &#RRGGBB.
 #  Работают плейсхолдеры PlaceholderAPI (%...%), если он установлен.
@@ -30,7 +30,7 @@ tab:
     # каждая строка списка = строка в табе, "" = пустая строка; {players_word} - "игрок/игрока/игроков"
     header:
       - "<#E6E6F0>На сервере</#E6E6F0> <#FFB347><bold>{online} {players_word}</bold></#FFB347>"
-      - "<gradient:#FB786F:#FDCB6B>DestroyCraft</gradient>"
+      - "<gradient:#FB786F:#FDCB6B>Amaterasu</gradient>"
       - "<#FDBD6C>SkyPvP</#FDBD6C>"
       - ""
     footer:
@@ -47,7 +47,7 @@ tab:
   game:
     header:
       - "<#E6E6F0>На сервере</#E6E6F0> <#FFB347><bold>{online} {players_word}</bold></#FFB347>"
-      - "<bold><gradient:#6D84FC:#FFFFFF>DestroyCraft</gradient></bold>"
+      - "<bold><gradient:#6D84FC:#FFFFFF>Amaterasu</gradient></bold>"
       - "<white>SkyPvP</white>"
       - ""
     footer:

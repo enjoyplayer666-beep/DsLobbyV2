@@ -54,6 +54,7 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
     public void onLoad() {
         // раньше плагин назывался DestroyLobby
         ru.dscraft.destroylobby.module.Modules.adoptOldFolder(this, "DestroyLobby");
+        Rebrand.apply(this);
     }
 
     @Override
