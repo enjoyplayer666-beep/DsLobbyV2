@@ -187,11 +187,11 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                 java.util.Set<String> actions = java.util.Set.of("pos1", "pos2", "target", "on", "off", "remove");
                 String base;
                 String action;
-                String label;
+                String portalName;
                 if (actions.contains(first)) {
                     base = "lobby-portal";
                     action = first;
-                    label = "лобби";
+                    portalName = "лобби";
                 } else {
                     if (args.length < 3 || !actions.contains(args[2].toLowerCase(java.util.Locale.ROOT))) {
                         sender.sendMessage("§7/destroylobby portal [имя] pos1|pos2|target|on|off|remove, /destroylobby portal list");
@@ -199,19 +199,19 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                     }
                     base = "portals." + first;
                     action = args[2].toLowerCase(java.util.Locale.ROOT);
-                    label = first;
+                    portalName = first;
                 }
                 if (action.equals("remove")) {
                     cfg.set(base, null);
                     if (base.equals("lobby-portal")) cfg.set("lobby-portal.enabled", false);
                     saveConfig();
-                    sender.sendMessage("§a[DestroyLobby] Портал " + label + " удалён.");
+                    sender.sendMessage("§a[DestroyLobby] Портал " + portalName + " удалён.");
                     return true;
                 }
                 if (action.equals("on") || action.equals("off")) {
                     cfg.set(base + ".enabled", action.equals("on"));
                     saveConfig();
-                    sender.sendMessage("§a[DestroyLobby] Портал " + label + " " + (action.equals("on") ? "включён" : "выключен") + ".");
+                    sender.sendMessage("§a[DestroyLobby] Портал " + portalName + " " + (action.equals("on") ? "включён" : "выключен") + ".");
                     return true;
                 }
                 Player player = requirePlayer(sender);
@@ -224,13 +224,13 @@ public final class DestroyLobbyPlugin extends JavaPlugin {
                     cfg.set(base + ".target.z", l.getBlockZ() + 0.5);
                     cfg.set(base + ".target.yaw", Math.round(l.getYaw() / 90f) * 90f);
                     cfg.set(base + ".target.pitch", 0f);
-                    sender.sendMessage("§a[DestroyLobby] Портал " + label + ": точка, куда он ведёт, поставлена здесь.");
+                    sender.sendMessage("§a[DestroyLobby] Портал " + portalName + ": точка, куда он ведёт, поставлена здесь.");
                 } else {
                     cfg.set(base + ".world", l.getWorld().getName());
                     cfg.set(base + "." + action + ".x", l.getBlockX());
                     cfg.set(base + "." + action + ".y", l.getBlockY());
                     cfg.set(base + "." + action + ".z", l.getBlockZ());
-                    sender.sendMessage("§a[DestroyLobby] Портал " + label + ": угол " + action + " поставлен: "
+                    sender.sendMessage("§a[DestroyLobby] Портал " + portalName + ": угол " + action + " поставлен: "
                             + l.getBlockX() + " " + l.getBlockY() + " " + l.getBlockZ());
                 }
                 saveConfig();
